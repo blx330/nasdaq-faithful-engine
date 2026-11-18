@@ -1,7 +1,7 @@
 # tail not moved back when the newest order of several leaves
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -42,7 +42,7 @@
+@@ -49,7 +49,7 @@
    }
    void unlink(Order* o) {
      if (o->prev) o->prev->next = o->next; else head = o->next;

@@ -1,7 +1,7 @@
 # new orders join the front of the queue
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -36,9 +36,9 @@
+@@ -37,9 +37,9 @@
    Order* tail = nullptr;
  
    void push_back(Order* o) {
@@ -12,5 +12,5 @@
 +    if (head) head->prev = o; else tail = o;
 +    head = o; qty += o->qty; ++count;
    }
-   void unlink(Order* o) {
-     if (o->prev) o->prev->next = o->next; else head = o->next;
+   // Insert `o` directly ahead of `at` (which must be in this level).
+   void insert_before(Order* at, Order* o) {

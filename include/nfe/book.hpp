@@ -26,6 +26,7 @@ struct Order {
   Level* level = nullptr;
   Order* prev = nullptr;
   Order* next = nullptr;
+  bool late = false;     // entered the queue ahead of orders displayed before it (see priority_by_ref)
 };
 
 struct Level {
@@ -39,6 +40,12 @@ struct Level {
     o->prev = tail; o->next = nullptr; o->level = this;
     if (tail) tail->next = o; else head = o;
     tail = o; qty += o->qty; ++count;
+  }
+  // Insert `o` directly ahead of `at` (which must be in this level).
+  void insert_before(Order* at, Order* o) {
+    o->level = this; o->next = at; o->prev = at->prev;
+    if (at->prev) at->prev->next = o; else head = o;
+    at->prev = o; qty += o->qty; ++count;
   }
   void unlink(Order* o) {
     if (o->prev) o->prev->next = o->next; else head = o->next;
@@ -60,6 +67,16 @@ class BaselineBook {
 
   explicit BaselineBook(size_t n_locates = 65536) : syms_(n_locates) {}
 
+  // Queue priority within a price level. Default: arrival order on the feed
+  // (push to the back). With priority_by_ref, a new order is placed by its
+  // reference number instead. Nasdaq assigns reference numbers in increasing
+  // order per symbol when it accepts an order, so outside the open the two
+  // are identical. They differ only for orders accepted before the open but
+  // first displayed after the opening cross: on 2020-01-30 the feed fills
+  // those ahead of orders displayed earlier but entered later.
+  bool priority_by_ref = false;
+  uint64_t late_inserts = 0;  // orders placed ahead of at least one resting order
+
   Order* find(uint64_t id) {
     auto it = orders_.find(id);
     return it == orders_.end() ? nullptr : &it->second;
@@ -72,7 +89,15 @@ class BaselineBook {
     Order& o = it->second;
     o.id = id; o.ts = ts; o.price = px; o.qty = qty; o.locate = loc; o.side = side;
     Level& lv = side == 'B' ? level_at(syms_[loc].bids, px) : level_at(syms_[loc].asks, px);
-    lv.push_back(&o);
+    if (priority_by_ref && lv.tail && lv.tail->id > id) {
+      Order* at = lv.tail;
+      while (at->prev && at->prev->id > id) at = at->prev;
+      lv.insert_before(at, &o);
+      o.late = true;
+      ++late_inserts;
+    } else {
+      lv.push_back(&o);
+    }
     return Result::Ok;
   }
 

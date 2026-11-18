@@ -1,7 +1,10 @@
 // Phase 2: matching-mode fidelity against the feed.
 //
-//   nfe_fidelity <itch-file> [--out DIR]
+//   nfe_fidelity <itch-file> [--out DIR] [--priority feed|ref]
 //
+// --priority ref (default) orders each price level by reference number, which
+// models orders entered before the open but released after the opening cross;
+// --priority feed is plain arrival order on the feed (see BaselineBook).
 // Writes DIR/fidelity.json (totals by class), DIR/per_symbol.csv,
 // DIR/events.csv (one row per inferred aggressor) and DIR/unexplained.txt.
 #include <chrono>
@@ -17,17 +20,21 @@
 using namespace nfe;
 
 int main(int argc, char** argv) {
-  if (argc < 2) { std::fprintf(stderr, "usage: nfe_fidelity <itch-file> [--out DIR]\n"); return 2; }
-  std::string out = "out";
-  for (int i = 2; i < argc; ++i)
+  if (argc < 2) { std::fprintf(stderr, "usage: nfe_fidelity <itch-file> [--out DIR] [--priority feed|ref]\n"); return 2; }
+  std::string out = "out", priority = "ref";
+  for (int i = 2; i < argc; ++i) {
     if (!std::strcmp(argv[i], "--out") && i + 1 < argc) out = argv[++i];
+    else if (!std::strcmp(argv[i], "--priority") && i + 1 < argc) priority = argv[++i];
+  }
+  if (priority != "ref" && priority != "feed") { std::fprintf(stderr, "--priority must be feed or ref\n"); return 2; }
   std::filesystem::create_directories(out);
 
   MappedFile f(argv[1]);
   auto fid = std::make_unique<Fidelity<>>();
+  fid->r.book.priority_by_ref = priority == "ref";
   fid->events_csv = std::fopen((out + "/events.csv").c_str(), "w");
   fid->unexplained_txt = std::fopen((out + "/unexplained.txt").c_str(), "w");
-  std::fprintf(fid->events_csv, "locate,ts_ns,side,qty,limit,n_msgs,has_p,has_c_printable,same_ts,class\n");
+  std::fprintf(fid->events_csv, "locate,ts_ns,side,qty,limit,n_msgs,has_p,has_c_printable,same_ts,late,class\n");
   const auto t0 = std::chrono::steady_clock::now();
   auto st = itch::parse_stream(f.data(), f.size(), *fid);
   fid->finish();
@@ -57,7 +64,9 @@ int main(int argc, char** argv) {
                (unsigned long long)st.messages, (unsigned long long)events, (unsigned long long)fid->r.c.unknown_ref);
   for (int k = 0; k < int(Cls::N); ++k)
     std::fprintf(j, "%s\"%s\": %llu", k ? ", " : "", cls_name(Cls(k)), (unsigned long long)fid->total[k]);
-  std::fprintf(j, "},\n  \"first_unexplained_msg\": %llu,\n  \"first_anomaly_msg\": %llu,\n  \"seconds\": %.3f\n}\n",
+  std::fprintf(j, "},\n  \"priority\": \"%s\",\n  \"late_inserts\": %llu,\n  \"late_events\": %llu",
+               priority.c_str(), (unsigned long long)fid->r.book.late_inserts, (unsigned long long)fid->late_events);
+  std::fprintf(j, ",\n  \"first_unexplained_msg\": %llu,\n  \"first_anomaly_msg\": %llu,\n  \"seconds\": %.3f\n}\n",
                (unsigned long long)fid->first_unexplained_msg, (unsigned long long)fid->r.c.first_anomaly_msg, secs);
   std::fclose(j);
 
@@ -71,6 +80,8 @@ int main(int argc, char** argv) {
               displayed ? (t[int(Cls::Match)] + t[int(Cls::MatchHidden)]) / displayed : 0.0,
               no_hidden ? t[int(Cls::Match)] / no_hidden : 0.0,
               (unsigned long long)t[int(Cls::Unexplained)], secs);
+  std::printf("  priority=%s late_inserts=%llu late_events=%llu\n", priority.c_str(),
+              (unsigned long long)fid->r.book.late_inserts, (unsigned long long)fid->late_events);
   for (int k = 0; k < int(Cls::N); ++k) std::printf("  %-17s %llu\n", cls_name(Cls(k)), (unsigned long long)t[k]);
   return 0;
 }

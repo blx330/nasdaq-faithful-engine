@@ -1,7 +1,7 @@
 # a duplicate id overwrites the live order
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -68,7 +68,7 @@
+@@ -85,7 +85,7 @@
  
    Result add(uint16_t loc, uint64_t id, char side, uint32_t px, uint32_t qty, uint64_t ts) {
      auto [it, fresh] = orders_.try_emplace(id);

@@ -61,11 +61,18 @@ struct Tracker : NullObserver {
     if (!at_best) return;
     Row row{};
     row.ref = o.id; row.ts = o.ts; row.loc = o.locate; row.side = o.side; row.price = o.price; row.qty = o.qty;
-    row.ahead = pending_ahead;
+    // An order released after the opening cross is placed by entry order
+    // (BaselineBook::priority_by_ref), so it can join ahead of resting orders.
+    if (o.late) {
+      row.ahead = 0;
+      for (const Order* p = o.prev; p; p = p->prev) row.ahead += p->qty;
+    } else {
+      row.ahead = pending_ahead;
+    }
     row.level_after = r.book.level_qty(o.locate, o.side, o.price);
     row.spread_ticks = (ba->price - bb->price) / 100;
     row.imbalance = double(int64_t(bb->qty) - int64_t(ba->qty)) / double(bb->qty + ba->qty);
-    row.improved = pending_ahead == 0;
+    row.improved = pending_ahead == 0;  // nothing resting at this price before it
     live[o.id] = rows.size();
     rows.push_back(row);
   }
@@ -139,6 +146,7 @@ int main(int argc, char** argv) {
     itch::parse_stream(f.data(), std::min<size_t>(f.size(), 64 << 20), d);
   }
   auto r = std::make_unique<Replayer<BaselineBook, Tracker>>(&t);
+  r->book.priority_by_ref = true;
   itch::parse_stream(f.data(), f.size(), *r);
   std::fclose(t.fills);
   std::fclose(t.mids);

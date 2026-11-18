@@ -1,7 +1,7 @@
 # best bid is the lowest bid
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -54,7 +54,7 @@
+@@ -61,7 +61,7 @@
  
  class BaselineBook {
   public:

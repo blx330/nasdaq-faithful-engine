@@ -20,7 +20,7 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-foreach(tool nfe_stats nfe_extract nfe_replay nfe_fidelity nfe_engine nfe_queue nfe_bench)
+foreach(tool nfe_stats nfe_extract nfe_replay nfe_fidelity nfe_engine nfe_queue nfe_bench nfe_trace)
   add_executable(${tool} src/tools/${tool}.cpp)
 endforeach()
 

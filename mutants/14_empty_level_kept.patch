@@ -1,7 +1,7 @@
 # empty price levels are never removed
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -143,7 +143,7 @@
+@@ -168,7 +168,7 @@
      const uint32_t px = lv->price;
      const uint64_t id = o->id;  // copy: erasing by a reference into the node is unsafe
      lv->unlink(o);

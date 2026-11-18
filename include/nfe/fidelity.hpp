@@ -69,6 +69,7 @@ class Fidelity {
   FILE* unexplained_txt = nullptr;  // details for every unexplained event
   uint64_t unexplained_logged = 0;
   uint64_t first_unexplained_msg = 0;
+  uint64_t late_events = 0;         // events whose feed fills include an order placed by priority_by_ref
 
   // ---- ITCH handlers ----
   void on(const itch::OrderExecuted& m) {
@@ -159,7 +160,7 @@ class Fidelity {
 
     // Feed side: displayed fills in order, plus flags.
     feed_.clear();
-    bool has_p = false, has_c_print = false, has_c_nonprint = false, unknown = false;
+    bool has_p = false, has_c_print = false, has_c_nonprint = false, unknown = false, late = false;
     uint64_t total_qty = 0;
     uint32_t worst = 0;
     const char aggr = rest_side_ ? opposite(rest_side_) : hidden_aggr_;
@@ -169,6 +170,7 @@ class Fidelity {
       else {
         const Order* o = r.book.find(x.ref);
         if (!o) { unknown = true; continue; }
+        if (o->late) late = true;
         if (x.type == 'E') px = o->price;
         else if (x.printable) has_c_print = true;
         else has_c_nonprint = true;
@@ -216,10 +218,11 @@ class Fidelity {
     }
     ++ss.cls[int(cls)];
     ++total[int(cls)];
+    if (late) ++late_events;
     if (events_csv)
-      std::fprintf(events_csv, "%u,%llu,%c,%llu,%u,%zu,%d,%d,%d,%s\n", loc_, (unsigned long long)ts_,
+      std::fprintf(events_csv, "%u,%llu,%c,%llu,%u,%zu,%d,%d,%d,%d,%s\n", loc_, (unsigned long long)ts_,
                    aggr ? aggr : '?', (unsigned long long)total_qty, limit, buf_.size(), has_p, has_c_print,
-                   int(same_ts), cls_name(cls));
+                   int(same_ts), int(late), cls_name(cls));
     if (cls == Cls::Unexplained && !first_unexplained_msg) first_unexplained_msg = r.c.n_msgs + 1;
     if (cls == Cls::Unexplained && unexplained_txt && unexplained_logged < 10000) log_unexplained(aggr, limit, total_qty);
   }

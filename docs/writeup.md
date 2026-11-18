@@ -35,6 +35,14 @@ size is fills plus remainder; its limit is the remainder's price or the worst
 fill. The event is buffered, so the book it is predicted against is exactly
 the pre-event book; then the messages are applied.
 
+**Queue priority is entry order, not display order.** Within a price level
+the book orders by reference number (`BaselineBook::priority_by_ref`).
+Nasdaq assigns reference numbers in increasing order per symbol at
+acceptance, so this equals feed order except for orders accepted before the
+open and first displayed after the opening cross; the feed fills those ahead
+of orders that were displayed earlier but entered later. `--priority feed`
+reproduces the plain-FIFO result for comparison.
+
 **Taxonomy.** match; match with hidden also hit; non-displayed liquidity (P in
 the event); execution at a non-display price (printable C); cross (outside
 continuous trading or non-printable C); grouping ambiguity (matches once
@@ -53,7 +61,10 @@ timestamp count.
 price-time executions and the prediction applies price-time priority. What it
 still tests: strict priority among displayed orders, displayed ahead of
 hidden at a price, replace losing priority, partial cancel keeping it, and
-the limit at which a sweep stops. Two same-side aggressors that split no
+the limit at which a sweep stops. On the first real day, ordering by
+reference number turned all 217 remaining unexplained events into matches
+and changed no matching event; it is still a model fitted to one day and
+five symbols until it holds on others. Two same-side aggressors that split no
 order are indistinguishable from one and are counted as one.
 
 ## 3. The test suite catches bugs, measured

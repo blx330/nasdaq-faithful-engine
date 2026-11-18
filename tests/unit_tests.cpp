@@ -80,6 +80,35 @@ static std::vector<uint64_t> ids(const std::vector<Fill>& f) {
   return v;
 }
 
+// Orders accepted before the open but displayed after the cross keep their
+// entry-order priority: with priority_by_ref the lower reference number goes
+// ahead of a resting order with a higher one. Default stays feed order.
+static void test_priority_by_ref() {
+  for (bool by_ref : {false, true}) {
+    BaselineBook b;
+    b.priority_by_ref = by_ref;
+    CHECK(b.add(1, 50, 'B', 100, 10, 1) == Result::Ok);   // displayed first, entered later
+    CHECK(b.add(1, 20, 'B', 100, 10, 2) == Result::Ok);   // released late, entered earlier
+    CHECK(b.add(1, 30, 'B', 100, 10, 3) == Result::Ok);
+    CHECK(b.add(1, 60, 'B', 100, 10, 4) == Result::Ok);   // normal arrival
+    std::vector<Fill> f;
+    predict(b, 1, 'S', 100, 40, f);
+    if (by_ref) {
+      CHECK((ids(f) == std::vector<uint64_t>{20, 30, 50, 60}));
+      CHECK(b.find(20)->late && b.find(30)->late && !b.find(50)->late && !b.find(60)->late);
+      CHECK(b.late_inserts == 2);
+    } else {
+      CHECK((ids(f) == std::vector<uint64_t>{50, 20, 30, 60}));
+      CHECK(b.late_inserts == 0);
+    }
+    CHECK(b.level_qty(1, 'B', 100) == 40);
+    // Removing the head and a middle order keeps the level consistent.
+    CHECK(b.remove(by_ref ? 20 : 50) == Result::Ok);
+    CHECK(b.reduce(30, 10) == Result::Ok);
+    CHECK(b.level_qty(1, 'B', 100) == 20);
+  }
+}
+
 static void test_book_and_priority() {
   BaselineBook b;
   CHECK(b.add(1, 1, 'S', 100, 100, 1) == Result::Ok);
@@ -127,6 +156,7 @@ static void test_book_and_priority() {
 int main() {
   test_itch_decode();
   test_book_and_priority();
+  test_priority_by_ref();
   std::printf("%d checks, %d failures\n", checks, failures);
   return failures ? 1 : 0;
 }

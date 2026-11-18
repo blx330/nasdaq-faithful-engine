@@ -1,7 +1,7 @@
 # replace at the same price keeps queue position
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -101,6 +101,14 @@
+@@ -126,6 +126,14 @@
      Order* o = find(old_id);
      if (!o) return Result::UnknownRef;
      if (find(new_id)) return Result::DuplicateRef;

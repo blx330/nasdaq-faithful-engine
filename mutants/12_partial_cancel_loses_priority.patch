@@ -1,7 +1,7 @@
 # a reduced order moves to the back of its queue
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -85,6 +85,7 @@
+@@ -110,6 +110,7 @@
      o->qty -= qty;
      o->level->qty -= qty;
      if (o->qty == 0) erase(o);

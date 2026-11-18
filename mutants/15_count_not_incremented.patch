@@ -1,12 +1,12 @@
 # level order count stops at one
 --- a/include/nfe/book.hpp
 +++ b/include/nfe/book.hpp
-@@ -38,7 +38,7 @@
+@@ -39,7 +39,7 @@
    void push_back(Order* o) {
      o->prev = tail; o->next = nullptr; o->level = this;
      if (tail) tail->next = o; else head = o;
 -    tail = o; qty += o->qty; ++count;
 +    tail = o; qty += o->qty; if (count == 0) ++count;
    }
-   void unlink(Order* o) {
-     if (o->prev) o->prev->next = o->next; else head = o->next;
+   // Insert `o` directly ahead of `at` (which must be in this level).
+   void insert_before(Order* at, Order* o) {

@@ -1,7 +1,7 @@
 # posted remainder looked for on the resting side
 --- a/include/nfe/fidelity.hpp
 +++ b/include/nfe/fidelity.hpp
-@@ -115,7 +115,7 @@
+@@ -116,7 +116,7 @@
    // passive order can never rest at or through a price that just traded
    // against hidden liquidity, so an Add there must be the aggressor's.
    bool is_remainder(const itch::AddOrder& m) {

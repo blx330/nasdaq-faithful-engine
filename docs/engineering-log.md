@@ -117,3 +117,53 @@ prediction.
 
 **Latency percentiles read 0 on Apple silicon**: the ARM timer ticks every
 ~42 ns. The benchmark now says so; latency numbers come from x86 Linux only.
+
+## 2026-11-18: the 216 queue-order events are entry-order priority
+
+**Result: 217 unexplained to 0** on the 2020-01-30 extract, with the 2,023
+repriced remainders unchanged. (217 rather than 216: one event appears only
+after the repricing fix.) Under `--priority ref`: 140,350 match, 2,024
+remainder_repriced, 0 unexplained of 191,798 continuous events; exact match
+93.96% of displayed-book events (93.82% with plain FIFO). Every class change
+against `--priority feed` is an improvement (216 unexplained to match, 1 to
+remainder_repriced, 12 non_displayed to match_hidden); no event that matched
+before stops matching. Synthetic days are identical in both modes (they have
+no late releases). Reconstruction stays clean: 0 unknown refs, 0 crossed
+books in continuous trading.
+
+**How it was found.** `nfe_trace` (new) prints an order's whole life. AAPL
+ref 10183329, which our book had at the head of the 32.05 bid, was added at
+09:30:00.168, before the opening cross at 09:30:00.487. Refs 8293673,
+8555157 and 9423541, all lower, were first displayed at 09:30:01.469, all
+at the same nanosecond, after the cross. The feed then filled every one of
+them before 10183329. The same for the other refs in the old note: 4226041
+(added 08:01) and 5714789 (08:31) were skipped for 3200197 and 4220857,
+lower refs first displayed at 09:30:11.378.
+
+**Pattern.** Per symbol, reference numbers on Adds and Replaces rise
+monotonically all day except for 53,803 Adds, all between 09:30:00 and
+09:30:40, whose refs are lower than one already seen. That is a batch of
+orders accepted before the open but released to the book only after the
+cross, spread over the first 40 seconds (29,250 of them land behind
+already-resting orders at their price; 2.87M shares; 11,932 by +35 s,
+29,250 by +40 s). Nasdaq ranks them by acceptance, which the reference
+number records. Likely orders entered pre-market that are not eligible
+until the open (regular-hours time in force). That reading is an
+inference from the feed; confirm against Nasdaq's rule text before stating
+it as fact.
+
+**Correction to the earlier note.** The skipped events were not only in the
+first two minutes: 145 were, 72 were later (up to 15:22) at deeper price
+levels where a late-released order was still resting when trading reached it.
+
+**Change.** `BaselineBook::priority_by_ref` (off by default, so the engine,
+the OCaml spec comparison, the mutants and the fast-book equivalence test
+are unchanged): a new order goes ahead of resting orders with a higher
+reference number. `nfe_fidelity --priority ref|feed` (ref is the default)
+reports `late_inserts` and `late_events`, and events.csv has a `late` column
+(290 events fill a late-placed order). `nfe_queue` uses ref priority and
+computes `ahead` from the order's real position. Unit test
+`test_priority_by_ref`.
+
+**Still open.** One day, five symbols. Rerun on the full day and other days
+before calling it general. FastBook does not implement the mode yet.
