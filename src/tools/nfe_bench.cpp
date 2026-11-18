@@ -125,6 +125,8 @@ static std::string bench(const char* name, const MappedFile& f, const std::vecto
   };
   const double p50 = pct(lat, 0.5), p99 = pct(lat, 0.99), p999 = pct(lat, 0.999);
   const double t50 = pct(empty, 0.5);
+  if (tpn < 0.1)  // one tick > 10 ns (Apple silicon: ~42 ns): percentiles are meaningless
+    std::printf("note: timer resolution %.0f ns; latency percentiles below are not meaningful here\n", 1 / tpn);
   auto a = stat(replay), c = stat(book_only);
   std::printf("%-9s replay %7.2f ± %.2f M msg/s   book-only %7.2f ± %.2f M op/s   latency p50 %.0f p99 %.0f p99.9 %.0f ns (timer %.0f ns)\n",
               name, a.mean, a.sd, c.mean, c.sd, p50, p99, p999, t50);

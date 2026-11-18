@@ -31,13 +31,14 @@ enum class Cls : uint8_t {
   NonDisplayPrice,  // differs only by execution price; printable C in the event
   Cross,            // outside continuous trading, or non-printable C: a cross
   Grouping,         // matches once repeated fills of one order are merged: >1 aggressor
+  Repriced,         // matches once the posted remainder is read as repriced, not as the limit
   HiddenOnly,       // only P messages: nothing displayed to predict
   Unexplained,
   N
 };
 inline const char* cls_name(Cls c) {
   static const char* n[] = {"match", "match_hidden", "non_displayed", "nondisplay_price", "cross",
-                            "grouping", "hidden_only", "unexplained"};
+                            "grouping", "remainder_repriced", "hidden_only", "unexplained"};
   return n[int(c)];
 }
 
@@ -189,13 +190,23 @@ class Fidelity {
     } else {
       if (has_remainder_) total_qty += remainder_.shares;
       limit = has_remainder_ ? remainder_.price : worst;
+      // A remainder posted less aggressively than the aggressor's own fills
+      // cannot be its limit: the order traded at `worst`, so its limit was at
+      // least that. Seen on Nasdaq when the remainder is repriced to avoid
+      // locking another market (Price to Comply). Predict with the fills' limit.
+      bool repriced = false;
+      if (has_remainder_ && !feed_.empty() && (aggr == 'B' ? limit < worst : limit > worst)) {
+        limit = worst;
+        repriced = true;
+      }
       auto bb = r.book.best_bid(loc_);
       auto ba = r.book.best_ask(loc_);
       if (bb && ba && ba->price - bb->price == 100) ++ss.one_tick_events;
       pred_.clear();
       predict(r.book, loc_, aggr, limit, uint32_t(total_qty), pred_);
       const bool exact = !unknown && pred_ == feed_;
-      if (exact && !has_p && !has_c_print) cls = Cls::Match;
+      if (exact && repriced && !has_p && !has_c_print) cls = Cls::Repriced;
+      else if (exact && !has_p && !has_c_print) cls = Cls::Match;
       else if (exact && has_c_print) cls = Cls::NonDisplayPrice;
       else if (exact) cls = Cls::MatchHidden;
       else if (has_p) cls = Cls::NonDisplayed;

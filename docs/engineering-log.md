@@ -78,3 +78,42 @@ it on the same file: 13.6 M msg/s median of 5, against 19.5 here (1.44x).
 Not like for like: CppTrader's market manager also runs handler callbacks and
 maintains per-level update events. Its optimized variants preallocate 300M
 order slots and ran out of memory on this 2-core sandbox.
+
+## 2026-11-18: first real day (2020-01-30, extract of AAPL, MSFT, SPY, QQQ, F)
+
+13,277,515 messages. Reconstruction clean: 0 unknown references, 0
+overfills, 0 crossed books in continuous trading.
+
+**Fidelity: 2,240 unexplained of 191,798 continuous events (1.17%), above
+the 1% kill criterion.** Every one falls into two patterns:
+
+1. **2,024 (90%): the posted remainder is priced less aggressively than the
+   aggressor's own fills.** Example, MSFT 09:30:00.485: a buy executes 99
+   shares at 173.97, then an Add for the remaining share is posted at
+   173.96. Read as the limit, 173.96 predicts no fills at all. Hypothesis:
+   Nasdaq's Price to Comply handling, which reprices a remainder that would
+   lock or cross another market's quote. Fix: a remainder that is less
+   aggressive than the fills is not the limit; predict with the worst fill
+   and classify a match as `remainder_repriced`. To check: does the posted
+   price sit one tick inside the away quote? That needs NBBO data.
+2. **216 (10%): queue order differs; the feed fills an older reference
+   first.** 145 of them in the first two minutes after the open. The same
+   few resting orders (refs 4226041, 5714789, 10183329) sit at the head of
+   our queue but are skipped event after event, while orders with lower
+   reference numbers that arrived later in the feed fill first. Hypothesis:
+   after the opening cross, priority follows original entry order (the
+   reference number), not the order in which Add messages were released.
+   Not yet fixed; next step is to find when those skipped orders were added
+   and what happened to them in the cross.
+
+**Fast book 4x slower than the baseline on the extract** (2.1 vs 8.3 M
+msg/s). Prediction was +20 to 30%. Cause: an extract keeps 5 of ~8,000
+symbols, so its reference numbers are sparse across the day's whole range,
+and nearly every Add allocates and zeroes a fresh 229 KB page that is freed
+again soon after. The design assumed dense references; it must be judged on
+the full day, and the paging should be compared against an open-addressing
+hash map, which has no sparsity problem. Kept in the log as a failed
+prediction.
+
+**Latency percentiles read 0 on Apple silicon**: the ARM timer ticks every
+~42 ns. The benchmark now says so; latency numbers come from x86 Linux only.

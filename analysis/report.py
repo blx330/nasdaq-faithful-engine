@@ -12,10 +12,11 @@ import pandas as pd
 
 from style import NEUTRAL, SERIES, TEXT2, setup
 
-CLASSES = ["match", "match_hidden", "nondisplay_price", "non_displayed", "hidden_only", "grouping", "cross", "unexplained"]
+CLASSES = ["match", "match_hidden", "remainder_repriced", "nondisplay_price", "non_displayed", "hidden_only", "grouping",
+           "cross", "unexplained"]
 LABELS = {"match": "Exact match", "match_hidden": "Exact (hidden also hit)", "nondisplay_price": "Non-display price (C)",
           "non_displayed": "Non-displayed liquidity (P)", "hidden_only": "Hidden only, nothing displayed",
-          "grouping": "Grouping ambiguity", "cross": "Opening/closing/halt cross", "unexplained": "Unexplained"}
+          "grouping": "Grouping ambiguity", "remainder_repriced": "Remainder repriced (Price to Comply)", "cross": "Opening/closing/halt cross", "unexplained": "Unexplained"}
 
 
 def load(path):
@@ -41,7 +42,7 @@ def fidelity_tables(days):
 def rates(t):
     cont = sum(t[c] for c in CLASSES if c != "cross")
     displayed = cont - t["hidden_only"]
-    no_hidden = t["match"] + t["grouping"] + t["unexplained"] + t["nondisplay_price"]
+    no_hidden = t["match"] + t["grouping"] + t["unexplained"] + t["nondisplay_price"] + t["remainder_repriced"]
     return {
         "continuous_events": cont,
         "exact_rate": (t["match"] + t["match_hidden"]) / displayed if displayed else None,
@@ -55,6 +56,8 @@ def tier_table(per):
     if per.empty:
         return pd.DataFrame()
     p = per.copy()
+    if "remainder_repriced" not in p:
+        p["remainder_repriced"] = 0
     p["continuous"] = p.messages - p.cross
     p["displayed"] = p.continuous - p.hidden_only
     p["tier"] = np.where(p.one_tick_events > 0.5 * p.displayed, "tick-constrained", "wider spread")

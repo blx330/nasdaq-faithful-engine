@@ -63,11 +63,12 @@ int main(int argc, char** argv) {
 
   const auto& t = fid->total;
   const double cont = double(events - t[int(Cls::Cross)]);
+  const double displayed = cont - double(t[int(Cls::HiddenOnly)]);
   const double no_hidden = double(t[int(Cls::Match)] + t[int(Cls::Grouping)] + t[int(Cls::Unexplained)] +
-                                  t[int(Cls::NonDisplayPrice)]);
+                                  t[int(Cls::NonDisplayPrice)] + t[int(Cls::Repriced)]);
   std::printf("events=%llu continuous=%.0f exact=%.4f exact_no_hidden=%.4f unexplained=%llu  (%.2fs)\n",
               (unsigned long long)events, cont,
-              cont ? (t[int(Cls::Match)] + t[int(Cls::MatchHidden)]) / cont : 0.0,
+              displayed ? (t[int(Cls::Match)] + t[int(Cls::MatchHidden)]) / displayed : 0.0,
               no_hidden ? t[int(Cls::Match)] / no_hidden : 0.0,
               (unsigned long long)t[int(Cls::Unexplained)], secs);
   for (int k = 0; k < int(Cls::N); ++k) std::printf("  %-17s %llu\n", cls_name(Cls(k)), (unsigned long long)t[k]);
