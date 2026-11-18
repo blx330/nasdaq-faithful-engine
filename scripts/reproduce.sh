@@ -19,7 +19,7 @@ mkdir -p data out "$RESULTS"
 
 echo "== build"
 cmake -S . -B "$BUILD" -DCMAKE_BUILD_TYPE=Release >/dev/null
-cmake --build "$BUILD" -j"$(nproc)" >/dev/null
+cmake --build "$BUILD" -j"$(getconf _NPROCESSORS_ONLN)" >/dev/null
 (cd spec && dune build 2>&1)
 
 echo "== synthetic days (ground truth, negative control, mutants)"
@@ -71,7 +71,7 @@ if [ "${CPPTRADER:-0}" = 1 ]; then scripts/cpptrader_baseline.sh "$BENCH_FILE" "
 echo "== mutant matrix"
 python3 mutants/make_patches.py >/dev/null
 python3 mutants/run_mutants.py --itch data/synth1.itch --truth data/truth1.jsonl --corrupt data/corrupt.itch \
-    --corrupt-expected data/corrupt_expected.json --ops "$MUTANT_OPS" --jobs "$(nproc)" --out "$RESULTS" \
+    --corrupt-expected data/corrupt_expected.json --ops "$MUTANT_OPS" --jobs "$(getconf _NPROCESSORS_ONLN)" --out "$RESULTS" \
     --build "$BUILD" | tail -2
 
 echo "== report"

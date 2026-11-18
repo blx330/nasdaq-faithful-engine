@@ -1,6 +1,6 @@
 # Nasdaq-faithful engine. `make help` lists targets.
 BUILD ?= build
-JOBS  ?= $(shell nproc)
+JOBS  ?= $(shell getconf _NPROCESSORS_ONLN)
 
 .PHONY: help build spec test fuzz fuzz-libfuzzer mutants reproduce extract bench cpptrader clean
 

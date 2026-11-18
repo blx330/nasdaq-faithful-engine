@@ -13,14 +13,14 @@ FILE=$(realpath "$1")
 OUT=${2:-results/cpptrader.json}
 RUNS=${3:-5}
 DIR=third_party/CppTrader
-CORE=${CORE:-$(( $(nproc) - 1 ))}
+CORE=${CORE:-$(( $(getconf _NPROCESSORS_ONLN) - 1 ))}
 
 if [ ! -x "$DIR/temp/cpptrader-performance-market_manager" ]; then
   mkdir -p third_party
   [ -d "$DIR" ] || git clone --depth 1 https://github.com/chronoxor/CppTrader.git "$DIR"
   (cd "$DIR" && gil update && mkdir -p temp && cd temp &&
     cmake .. -DCMAKE_BUILD_TYPE=Release -DCPPTRADER_MODULE=OFF >/dev/null &&
-    make -j"$(nproc)" cpptrader-performance-market_manager >/dev/null)
+    make -j"$(getconf _NPROCESSORS_ONLN)" cpptrader-performance-market_manager >/dev/null)
 fi
 PIN=""
 command -v taskset >/dev/null 2>&1 && PIN="taskset -c $CORE"

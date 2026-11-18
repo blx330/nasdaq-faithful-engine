@@ -12,7 +12,7 @@ FILE=$1
 OUT=${2:-results/bench.json}
 RUNS=${3:-10}
 BUILD=${BUILD:-build}
-CORE=${CORE:-$(( $(nproc) - 1 ))}
+CORE=${CORE:-$(( $(getconf _NPROCESSORS_ONLN) - 1 ))}
 
 if command -v cpupower >/dev/null 2>&1; then
   sudo -n cpupower frequency-set -g performance >/dev/null 2>&1 || echo "note: could not set the performance governor"

@@ -9,12 +9,11 @@
 // and per-message latency percentiles of the book-only path, with the timer's
 // own overhead measured and reported. Pin the process and fix the CPU
 // frequency for numbers worth comparing (scripts/bench.sh does both).
-#include <x86intrin.h>
-
 #include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <cstdint>
 #include <cstring>
 #include <memory>
 #include <string>
@@ -26,6 +25,19 @@
 
 using namespace nfe;
 using Clock = std::chrono::steady_clock;
+
+// Cheapest available tick counter, serialized so the timed region cannot
+// leak out. x86: the TSC. ARM (Apple silicon): the generic timer, which runs
+// at 24 MHz on Apple chips, so per-operation latency there is quantized to
+// about 42 ns; throughput numbers are unaffected. Benchmark on x86 Linux.
+#if defined(__x86_64__) || defined(_M_X64)
+#include <x86intrin.h>
+static inline uint64_t ticks() { _mm_lfence(); const uint64_t t = __rdtsc(); _mm_lfence(); return t; }
+#elif defined(__aarch64__)
+static inline uint64_t ticks() { uint64_t v; asm volatile("isb; mrs %0, cntvct_el0" : "=r"(v)::"memory"); return v; }
+#else
+static inline uint64_t ticks() { return uint64_t(Clock::now().time_since_epoch().count()); }
+#endif
 
 struct Op {
   char type;
@@ -72,9 +84,9 @@ static Stat stat(const std::vector<double>& v) {
 
 static double ticks_per_ns() {
   const auto t0 = Clock::now();
-  const uint64_t c0 = __rdtsc();
+  const uint64_t c0 = ticks();
   while (Clock::now() - t0 < std::chrono::milliseconds(200)) {}
-  const uint64_t c1 = __rdtsc();
+  const uint64_t c1 = ticks();
   return double(c1 - c0) / std::chrono::duration<double, std::nano>(Clock::now() - t0).count();
 }
 
@@ -99,15 +111,13 @@ static std::string bench(const char* name, const MappedFile& f, const std::vecto
   {
     auto b = std::make_unique<Book>();
     for (size_t i = 0; i < ops.size(); ++i) {
-      _mm_lfence();
-      const uint64_t c0 = __rdtsc();
+      const uint64_t c0 = ticks();
       apply(*b, ops[i]);
-      _mm_lfence();
-      lat[i] = uint32_t(std::min<uint64_t>(__rdtsc() - c0, UINT32_MAX));
+      lat[i] = uint32_t(std::min<uint64_t>(ticks() - c0, UINT32_MAX));
     }
   }
   std::vector<uint32_t> empty(1 << 20);
-  for (auto& e : empty) { _mm_lfence(); const uint64_t c0 = __rdtsc(); _mm_lfence(); e = uint32_t(__rdtsc() - c0); }
+  for (auto& e : empty) { const uint64_t c0 = ticks(); e = uint32_t(ticks() - c0); }
   auto pct = [&](std::vector<uint32_t>& v, double p) {
     size_t k = size_t(p * (v.size() - 1));
     std::nth_element(v.begin(), v.begin() + k, v.end());
