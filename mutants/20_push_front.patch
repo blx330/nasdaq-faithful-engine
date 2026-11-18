@@ -1,0 +1,16 @@
+# new orders join the front of the queue
+--- a/include/nfe/book.hpp
++++ b/include/nfe/book.hpp
+@@ -36,9 +36,9 @@
+   Order* tail = nullptr;
+ 
+   void push_back(Order* o) {
+-    o->prev = tail; o->next = nullptr; o->level = this;
+-    if (tail) tail->next = o; else head = o;
+-    tail = o; qty += o->qty; ++count;
++    o->next = head; o->prev = nullptr; o->level = this;
++    if (head) head->prev = o; else tail = o;
++    head = o; qty += o->qty; ++count;
+   }
+   void unlink(Order* o) {
+     if (o->prev) o->prev->next = o->next; else head = o->next;

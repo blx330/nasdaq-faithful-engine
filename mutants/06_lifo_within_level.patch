@@ -1,0 +1,12 @@
+# newest order at a price fills first
+--- a/include/nfe/matcher.hpp
++++ b/include/nfe/matcher.hpp
+@@ -31,7 +31,7 @@
+   uint32_t left = qty;
+   book.walk(loc, opposite(aggr_side), [&](const auto& lv) {
+     if (left == 0 || !crosses(aggr_side, limit, lv.price)) return false;
+-    for (const auto* o = lv.head; o && left > 0; o = o->next) {
++    for (const auto* o = lv.tail; o && left > 0; o = o->prev) {
+       const uint32_t q = o->qty < left ? o->qty : left;
+       out.push_back(Fill{o->id, lv.price, q});
+       left -= q;

@@ -1,0 +1,12 @@
+# best bid is the lowest bid
+--- a/include/nfe/book.hpp
++++ b/include/nfe/book.hpp
+@@ -54,7 +54,7 @@
+ 
+ class BaselineBook {
+  public:
+-  using Bids = std::map<uint32_t, Level, std::greater<uint32_t>>;
++  using Bids = std::map<uint32_t, Level, std::less<uint32_t>>;
+   using Asks = std::map<uint32_t, Level, std::less<uint32_t>>;
+   struct Sym { Bids bids; Asks asks; };
+ 

@@ -1,0 +1,13 @@
+build*/
+spec/_build/
+out/
+third_party/
+data/*
+!data/README.md
+fuzz/corpus/
+__pycache__/
+*.pyc
+results/golden/
+crash-*
+leak-*
+timeout-*

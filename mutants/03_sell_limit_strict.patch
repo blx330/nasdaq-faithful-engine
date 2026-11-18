@@ -1,0 +1,12 @@
+# a sell does not trade at exactly its limit
+--- a/include/nfe/matcher.hpp
++++ b/include/nfe/matcher.hpp
+@@ -22,7 +22,7 @@
+ 
+ // True if an aggressor on `aggr_side` with limit `limit` trades at `px`.
+ inline bool crosses(char aggr_side, uint32_t limit, uint32_t px) {
+-  return aggr_side == 'B' ? px <= limit : px >= limit;
++  return aggr_side == 'B' ? px <= limit : px > limit;
+ }
+ 
+ template <class Book>

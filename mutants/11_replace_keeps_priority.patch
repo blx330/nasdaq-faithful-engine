@@ -1,0 +1,18 @@
+# replace at the same price keeps queue position
+--- a/include/nfe/book.hpp
++++ b/include/nfe/book.hpp
+@@ -101,6 +101,14 @@
+     Order* o = find(old_id);
+     if (!o) return Result::UnknownRef;
+     if (find(new_id)) return Result::DuplicateRef;
++    if (px == o->price) {
++      auto nh = orders_.extract(old_id);
++      Order& n = nh.mapped();
++      n.level->qty = n.level->qty - n.qty + qty;
++      n.qty = qty; n.id = new_id; nh.key() = new_id;
++      orders_.insert(std::move(nh));
++      return Result::Ok;
++    }
+     const uint16_t loc = o->locate;
+     const char side = o->side;
+     erase(o);

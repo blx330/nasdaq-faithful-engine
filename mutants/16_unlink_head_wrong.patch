@@ -1,0 +1,12 @@
+# removing the head skips the next order too
+--- a/include/nfe/book.hpp
++++ b/include/nfe/book.hpp
+@@ -41,7 +41,7 @@
+     tail = o; qty += o->qty; ++count;
+   }
+   void unlink(Order* o) {
+-    if (o->prev) o->prev->next = o->next; else head = o->next;
++    if (o->prev) o->prev->next = o->next; else head = o->next ? o->next->next : nullptr;
+     if (o->next) o->next->prev = o->prev; else tail = o->prev;
+     qty -= o->qty; --count;
+     o->prev = o->next = nullptr; o->level = nullptr;

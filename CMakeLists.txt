@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.20)
+project(nasdaq_faithful_engine CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+option(NFE_SANITIZE "Build with AddressSanitizer and UBSan" OFF)
+option(NFE_FUZZ "Build libFuzzer targets (clang only)" OFF)
+
+add_compile_options(-Wall -Wextra -Wno-unused-parameter)
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -g -DNDEBUG")
+if(NFE_SANITIZE)
+  add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=all)
+  add_link_options(-fsanitize=address,undefined)
+endif()
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+foreach(tool nfe_stats nfe_extract nfe_replay nfe_fidelity nfe_engine nfe_queue nfe_bench)
+  add_executable(${tool} src/tools/${tool}.cpp)
+endforeach()
+
+enable_testing()
+add_executable(unit_tests tests/unit_tests.cpp)
+add_test(NAME unit_tests COMMAND unit_tests)
+add_executable(property_tests tests/property_tests.cpp)
+add_test(NAME property_tests COMMAND property_tests 20000)
+add_executable(book_equivalence tests/book_equivalence.cpp)
+add_test(NAME book_equivalence COMMAND book_equivalence 200000)
+
+if(NFE_FUZZ)
+  foreach(t fuzz_parser fuzz_engine)
+    add_executable(${t} fuzz/${t}.cpp)
+    target_compile_options(${t} PRIVATE -fsanitize=fuzzer,address,undefined)
+    target_link_options(${t} PRIVATE -fsanitize=fuzzer,address,undefined)
+  endforeach()
+endif()

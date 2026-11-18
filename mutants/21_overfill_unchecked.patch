@@ -1,0 +1,12 @@
+# executions larger than the order are not caught
+--- a/include/nfe/book.hpp
++++ b/include/nfe/book.hpp
+@@ -81,7 +81,7 @@
+   Result reduce(uint64_t id, uint32_t qty) {
+     Order* o = find(id);
+     if (!o) return Result::UnknownRef;
+-    if (qty > o->qty) return Result::Overfill;
++    if (qty > o->qty + 100) return Result::Overfill;
+     o->qty -= qty;
+     o->level->qty -= qty;
+     if (o->qty == 0) erase(o);

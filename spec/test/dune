@@ -1,0 +1,3 @@
+(test
+ (name props)
+ (libraries spec qcheck-core qcheck-core.runner))

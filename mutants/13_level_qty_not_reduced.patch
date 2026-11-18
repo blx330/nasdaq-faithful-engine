@@ -1,0 +1,11 @@
+# level total not updated on a partial reduce
+--- a/include/nfe/book.hpp
++++ b/include/nfe/book.hpp
+@@ -83,7 +83,6 @@
+     if (!o) return Result::UnknownRef;
+     if (qty > o->qty) return Result::Overfill;
+     o->qty -= qty;
+-    o->level->qty -= qty;
+     if (o->qty == 0) erase(o);
+     return Result::Ok;
+   }

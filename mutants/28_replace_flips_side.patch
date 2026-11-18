@@ -1,0 +1,12 @@
+# replace submits the new order on the other side
+--- a/src/tools/nfe_engine.cpp
++++ b/src/tools/nfe_engine.cpp
+@@ -75,7 +75,7 @@
+     } else if (std::sscanf(line, "U %llu %llu %lld %lld", &a, &b, &p, &q) == 4) {
+       Order* o = book->find(a);
+       if (!o || q <= 0 || p <= 0 || (b != a && book->find(b))) { reject(a); continue; }
+-      cmd = o->side;
++      cmd = opposite(o->side);
+       book->remove(a);
+       do_submit(*book, b, cmd, p, q, ts);
+     }

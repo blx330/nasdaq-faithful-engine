@@ -1,0 +1,14 @@
+{
+ "total": 28,
+ "caught": 28,
+ "per_validator": {
+  "fuzzer": 18,
+  "properties": 19,
+  "replay": 24
+ },
+ "only_one": 10,
+ "median_ops": {
+  "fuzzer": 200,
+  "properties": 27
+ }
+}

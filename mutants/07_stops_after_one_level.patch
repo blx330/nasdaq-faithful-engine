@@ -1,0 +1,12 @@
+# sweep never goes past the first price level
+--- a/include/nfe/matcher.hpp
++++ b/include/nfe/matcher.hpp
+@@ -36,7 +36,7 @@
+       out.push_back(Fill{o->id, lv.price, q});
+       left -= q;
+     }
+-    return left > 0;
++    return false;
+   });
+ }
+ 

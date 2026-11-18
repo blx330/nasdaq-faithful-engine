@@ -1,0 +1,12 @@
+# aggressor matches against its own side
+--- a/include/nfe/matcher.hpp
++++ b/include/nfe/matcher.hpp
+@@ -29,7 +29,7 @@
+ void predict(const Book& book, uint16_t loc, char aggr_side, uint32_t limit, uint32_t qty,
+              std::vector<Fill>& out) {
+   uint32_t left = qty;
+-  book.walk(loc, opposite(aggr_side), [&](const auto& lv) {
++  book.walk(loc, aggr_side, [&](const auto& lv) {
+     if (left == 0 || !crosses(aggr_side, limit, lv.price)) return false;
+     for (const auto* o = lv.head; o && left > 0; o = o->next) {
+       const uint32_t q = o->qty < left ? o->qty : left;

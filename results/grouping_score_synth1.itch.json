@@ -1,0 +1,16 @@
+{
+ "truth_aggressors": 29031,
+ "inferred_events": 28462,
+ "one_to_one": 26791,
+ "merged_aggressors": 569,
+ "split_events": 0,
+ "missing": 0,
+ "grouping_error_rate": 0.077159,
+ "side_correct": 1.0,
+ "qty_correct": 1.0,
+ "limit_consistent": 1.0,
+ "posted_remainders": 3266,
+ "posted_recovered": 1.0,
+ "multi_aggressor_timestamps": 1120,
+ "multi_flagged": 1120
+}

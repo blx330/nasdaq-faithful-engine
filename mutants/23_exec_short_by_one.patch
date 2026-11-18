@@ -1,0 +1,12 @@
+# executions remove one share too few
+--- a/include/nfe/replay.hpp
++++ b/include/nfe/replay.hpp
+@@ -104,7 +104,7 @@
+     Order* o = book.find(m.ref);
+     if (!o) { flag(c.unknown_ref); return; }
+     obs_->pre_exec(*this, *o, m.shares, o->price, m.h.ts, true);
+-    tally(book.reduce(m.ref, m.shares));
++    tally(book.reduce(m.ref, m.shares > 1 ? m.shares - 1 : m.shares));
+     obs_->touched(*this, m.h.locate, m.h.ts);
+   }
+   void on(const itch::OrderExecutedWithPrice& m) {

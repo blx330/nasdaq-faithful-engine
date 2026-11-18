@@ -1,0 +1,12 @@
+# trades print at the aggressor's limit, not the resting price
+--- a/include/nfe/matcher.hpp
++++ b/include/nfe/matcher.hpp
+@@ -33,7 +33,7 @@
+     if (left == 0 || !crosses(aggr_side, limit, lv.price)) return false;
+     for (const auto* o = lv.head; o && left > 0; o = o->next) {
+       const uint32_t q = o->qty < left ? o->qty : left;
+-      out.push_back(Fill{o->id, lv.price, q});
++      out.push_back(Fill{o->id, limit, q});
+       left -= q;
+     }
+     return left > 0;

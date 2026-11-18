@@ -1,0 +1,12 @@
+# a partial cancel deletes the whole order
+--- a/include/nfe/replay.hpp
++++ b/include/nfe/replay.hpp
+@@ -121,7 +121,7 @@
+     Order* o = book.find(m.ref);
+     if (!o) { flag(c.unknown_ref); return; }
+     obs_->pre_cancel(*this, *o, m.shares, m.h.ts);
+-    tally(book.reduce(m.ref, m.shares));
++    book.remove(m.ref);
+     obs_->touched(*this, m.h.locate, m.h.ts);
+   }
+   void on(const itch::OrderDelete& m) {

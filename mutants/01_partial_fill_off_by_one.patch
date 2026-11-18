@@ -1,0 +1,12 @@
+# a partial fill takes one share too few
+--- a/include/nfe/matcher.hpp
++++ b/include/nfe/matcher.hpp
+@@ -32,7 +32,7 @@
+   book.walk(loc, opposite(aggr_side), [&](const auto& lv) {
+     if (left == 0 || !crosses(aggr_side, limit, lv.price)) return false;
+     for (const auto* o = lv.head; o && left > 0; o = o->next) {
+-      const uint32_t q = o->qty < left ? o->qty : left;
++      const uint32_t q = o->qty < left ? o->qty : (left > 1 ? left - 1 : left);
+       out.push_back(Fill{o->id, lv.price, q});
+       left -= q;
+     }

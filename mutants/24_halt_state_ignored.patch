@@ -1,0 +1,12 @@
+# halts and quote-only periods count as continuous trading
+--- a/include/nfe/replay.hpp
++++ b/include/nfe/replay.hpp
+@@ -70,7 +70,7 @@
+   // Continuous trading for a symbol: market hours, state T, and either a
+   // cross has printed since the symbol entered T or the grace period passed.
+   bool continuous(uint16_t loc, uint64_t ts) const {
+-    if (!market_hours() || state[loc] != 'T') return false;
++    if (!market_hours()) return false;
+     const uint64_t since = std::max(state_ts[loc], market_open_ts);
+     return cross_since_t[loc] || ts >= since + kOpenGraceNs;
+   }

@@ -1,0 +1,12 @@
+# Replace shares and price swapped
+--- a/include/nfe/itch.hpp
++++ b/include/nfe/itch.hpp
+@@ -153,7 +153,7 @@
+     case 'C': hd.on(OrderExecutedWithPrice{h, be64(b), be32(b + 8), be64(b + 12), char(b[20]), be32(b + 21)}); break;
+     case 'X': hd.on(OrderCancel{h, be64(b), be32(b + 8)}); break;
+     case 'D': hd.on(OrderDelete{h, be64(b)}); break;
+-    case 'U': hd.on(OrderReplace{h, be64(b), be64(b + 8), be32(b + 16), be32(b + 20)}); break;
++    case 'U': hd.on(OrderReplace{h, be64(b), be64(b + 8), be32(b + 20), be32(b + 16)}); break;
+     case 'P': hd.on(Trade{h, be64(b), char(b[8]), be32(b + 9), symbol(b + 13), be32(b + 21), be64(b + 25)}); break;
+     case 'Q': hd.on(CrossTrade{h, be64(b), symbol(b + 8), be32(b + 16), be64(b + 20), char(b[28])}); break;
+     case 'B': hd.on(BrokenTrade{h, be64(b)}); break;

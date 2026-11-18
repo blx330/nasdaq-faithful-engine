@@ -1,0 +1,12 @@
+# posted remainder looked for on the resting side
+--- a/include/nfe/fidelity.hpp
++++ b/include/nfe/fidelity.hpp
+@@ -114,7 +114,7 @@
+   // passive order can never rest at or through a price that just traded
+   // against hidden liquidity, so an Add there must be the aggressor's.
+   bool is_remainder(const itch::AddOrder& m) {
+-    if (rest_side_) return m.side == opposite(rest_side_);
++    if (rest_side_) return m.side == rest_side_;
+     uint32_t lo = UINT32_MAX, hi = 0;
+     for (auto& x : buf_) { lo = std::min(lo, x.price); hi = std::max(hi, x.price); }
+     if ((m.side == 'B' && m.price >= hi) || (m.side == 'S' && m.price <= lo)) {

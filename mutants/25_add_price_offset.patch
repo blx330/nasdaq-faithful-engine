@@ -1,0 +1,12 @@
+# Add price read one byte early
+--- a/include/nfe/itch.hpp
++++ b/include/nfe/itch.hpp
+@@ -145,7 +145,7 @@
+     case 'h': hd.on(OperationalHalt{h, symbol(b), char(b[8]), char(b[9])}); break;
+     case 'A':
+     case 'F': {
+-      AddOrder m{h, be64(b), char(b[8]), be32(b + 9), symbol(b + 13), be32(b + 21), {}, t == 'F'};
++      AddOrder m{h, be64(b), char(b[8]), be32(b + 9), symbol(b + 13), be32(b + 20), {}, t == 'F'};
+       if (t == 'F') std::memcpy(m.mpid, b + 25, 4);
+       hd.on(m); break;
+     }

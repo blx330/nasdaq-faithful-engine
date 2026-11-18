@@ -1,0 +1,478 @@
+[
+ {
+  "mutant": "01_partial_fill_off_by_one",
+  "desc": "a partial fill takes one share too few",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 13
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "02_buy_limit_strict",
+  "desc": "a buy does not trade at exactly its limit",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 53
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5119,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "03_sell_limit_strict",
+  "desc": "a sell does not trade at exactly its limit",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 30
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "04_side_comparison_swapped",
+  "desc": "wrong side comparison for the limit test",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 4
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5278,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "05_walks_own_side",
+  "desc": "aggressor matches against its own side",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 3
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "06_lifo_within_level",
+  "desc": "newest order at a price fills first",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 30
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "07_stops_after_one_level",
+  "desc": "sweep never goes past the first price level",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 40
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5278,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "08_fill_at_aggressor_limit",
+  "desc": "trades print at the aggressor's limit, not the resting price",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 4
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5278,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "09_rests_full_size",
+  "desc": "remainder rests with the original size",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 18
+  },
+  "replay": {
+   "caught": false,
+   "ops": null,
+   "why": ""
+  }
+ },
+ {
+  "mutant": "10_no_rest_after_partial",
+  "desc": "a partially filled order does not rest its remainder",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 18
+  },
+  "replay": {
+   "caught": false,
+   "ops": null,
+   "why": ""
+  }
+ },
+ {
+  "mutant": "11_replace_keeps_priority",
+  "desc": "replace at the same price keeps queue position",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": true,
+   "ops": 59
+  },
+  "replay": {
+   "caught": true,
+   "ops": 6413,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "12_partial_cancel_loses_priority",
+  "desc": "a reduced order moves to the back of its queue",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 62
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "13_level_qty_not_reduced",
+  "desc": "level total not updated on a partial reduce",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": true,
+   "ops": 2
+  },
+  "replay": {
+   "caught": false,
+   "ops": null,
+   "why": ""
+  }
+ },
+ {
+  "mutant": "14_empty_level_kept",
+  "desc": "empty price levels are never removed",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 5
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5003,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "15_count_not_incremented",
+  "desc": "level order count stops at one",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 27
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5005,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "16_unlink_head_wrong",
+  "desc": "removing the head skips the next order too",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 30
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "17_unlink_tail_stale",
+  "desc": "tail not moved back when the newest order of several leaves",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 51
+  },
+  "replay": {
+   "caught": true,
+   "ops": null,
+   "why": "crash"
+  }
+ },
+ {
+  "mutant": "18_bids_ascending",
+  "desc": "best bid is the lowest bid",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 3
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "19_duplicate_ref_accepted",
+  "desc": "a duplicate id overwrites the live order",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 63975,
+   "why": "missed injected duplicate_ref"
+  }
+ },
+ {
+  "mutant": "20_push_front",
+  "desc": "new orders join the front of the queue",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": true,
+   "ops": 27
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5006,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "21_overfill_unchecked",
+  "desc": "executions larger than the order are not caught",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 106630,
+   "why": "book corrupted by an injected fault"
+  }
+ },
+ {
+  "mutant": "22_cancel_deletes",
+  "desc": "a partial cancel deletes the whole order",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 201,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "23_exec_short_by_one",
+  "desc": "executions remove one share too few",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5181,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "24_halt_state_ignored",
+  "desc": "halts and quote-only periods count as continuous trading",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 88917,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "25_add_price_offset",
+  "desc": "Add price read one byte early",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5005,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "26_replace_fields_swapped",
+  "desc": "Replace shares and price swapped",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 5108,
+   "why": "anomaly on clean feed"
+  }
+ },
+ {
+  "mutant": "27_remainder_side_wrong",
+  "desc": "posted remainder looked for on the resting side",
+  "fuzzer": {
+   "caught": false,
+   "ops": null
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": true,
+   "ops": 213238,
+   "why": "ground-truth score changed"
+  }
+ },
+ {
+  "mutant": "28_replace_flips_side",
+  "desc": "replace submits the new order on the other side",
+  "fuzzer": {
+   "caught": true,
+   "ops": 200
+  },
+  "properties": {
+   "caught": false,
+   "ops": null
+  },
+  "replay": {
+   "caught": false,
+   "ops": null,
+   "why": ""
+  }
+ }
+]
