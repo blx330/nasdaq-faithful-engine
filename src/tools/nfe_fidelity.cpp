@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
   fid->r.book.priority_by_ref = priority == "ref";
   fid->events_csv = std::fopen((out + "/events.csv").c_str(), "w");
   fid->unexplained_txt = std::fopen((out + "/unexplained.txt").c_str(), "w");
+  fid->audit_txt = std::fopen((out + "/audit.txt").c_str(), "w");
   std::fprintf(fid->events_csv, "locate,ts_ns,side,qty,limit,n_msgs,has_p,has_c_printable,same_ts,late,class\n");
   const auto t0 = std::chrono::steady_clock::now();
   auto st = itch::parse_stream(f.data(), f.size(), *fid);
@@ -41,6 +42,7 @@ int main(int argc, char** argv) {
   const double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   std::fclose(fid->events_csv);
   std::fclose(fid->unexplained_txt);
+  std::fclose(fid->audit_txt);
 
   FILE* ps = std::fopen((out + "/per_symbol.csv").c_str(), "w");
   std::fprintf(ps, "locate,symbol,messages");
@@ -66,6 +68,19 @@ int main(int argc, char** argv) {
     std::fprintf(j, "%s\"%s\": %llu", k ? ", " : "", cls_name(Cls(k)), (unsigned long long)fid->total[k]);
   std::fprintf(j, "},\n  \"priority\": \"%s\",\n  \"late_inserts\": %llu,\n  \"late_events\": %llu",
                priority.c_str(), (unsigned long long)fid->r.book.late_inserts, (unsigned long long)fid->late_events);
+  std::fprintf(j, ",\n  \"audit\": {\"non_displayed\": {\"ok\": %llu, \"bad\": %llu, \"skipped\": %llu}, \"nondisplay_price\": {\"ok\": %llu, \"bad\": %llu, \"skipped\": %llu}}",
+               (unsigned long long)fid->audit_ok[0], (unsigned long long)fid->audit_bad[0], (unsigned long long)fid->audit_skipped[0],
+               (unsigned long long)fid->audit_ok[1], (unsigned long long)fid->audit_bad[1], (unsigned long long)fid->audit_skipped[1]);
+  std::fprintf(j, ",\n  \"audit_reconstruction\": {\"non_displayed\": {\"ok\": %llu, \"residual\": %llu}, \"nondisplay_price\": {\"ok\": %llu, \"residual\": %llu}}",
+               (unsigned long long)fid->audit_recon_ok[0], (unsigned long long)fid->audit_recon_bad[0],
+               (unsigned long long)fid->audit_recon_ok[1], (unsigned long long)fid->audit_recon_bad[1]);
+  std::fprintf(j, ",\n  \"audit_categories\": {");
+  for (int k = 0; k < 2; ++k) {
+    std::fprintf(j, "%s\"%s\": [", k ? ", " : "", k ? "nondisplay_price" : "non_displayed");
+    for (int c = 0; c < 5; ++c) std::fprintf(j, "%s%llu", c ? ", " : "", (unsigned long long)fid->audit_cat[k][c]);
+    std::fprintf(j, "]");
+  }
+  std::fprintf(j, "}");
   std::fprintf(j, ",\n  \"first_unexplained_msg\": %llu,\n  \"first_anomaly_msg\": %llu,\n  \"seconds\": %.3f\n}\n",
                (unsigned long long)fid->first_unexplained_msg, (unsigned long long)fid->r.c.first_anomaly_msg, secs);
   std::fclose(j);
@@ -83,5 +98,15 @@ int main(int argc, char** argv) {
   std::printf("  priority=%s late_inserts=%llu late_events=%llu\n", priority.c_str(),
               (unsigned long long)fid->r.book.late_inserts, (unsigned long long)fid->late_events);
   for (int k = 0; k < int(Cls::N); ++k) std::printf("  %-17s %llu\n", cls_name(Cls(k)), (unsigned long long)t[k]);
+  for (int k = 0; k < 2; ++k)
+    std::printf("  audit_reconstruction %s: reproduced=%llu residual=%llu\n", k ? "nondisplay_price" : "non_displayed",
+                (unsigned long long)fid->audit_recon_ok[k], (unsigned long long)fid->audit_recon_bad[k]);
+  for (int k = 0; k < 2; ++k)
+    std::printf("  audit_bad %s: price_priority=%llu tie=%llu contradiction=%llu non_monotone=%llu qty_only=%llu\n",
+                k ? "nondisplay_price" : "non_displayed", (unsigned long long)fid->audit_cat[k][0], (unsigned long long)fid->audit_cat[k][1],
+                (unsigned long long)fid->audit_cat[k][2], (unsigned long long)fid->audit_cat[k][3], (unsigned long long)fid->audit_cat[k][4]);
+  std::printf("  audit (displayed-only re-prediction) non_displayed ok=%llu bad=%llu skipped=%llu; nondisplay_price ok=%llu bad=%llu skipped=%llu\n",
+              (unsigned long long)fid->audit_ok[0], (unsigned long long)fid->audit_bad[0], (unsigned long long)fid->audit_skipped[0],
+              (unsigned long long)fid->audit_ok[1], (unsigned long long)fid->audit_bad[1], (unsigned long long)fid->audit_skipped[1]);
   return 0;
 }
