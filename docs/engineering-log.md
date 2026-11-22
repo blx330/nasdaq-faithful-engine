@@ -119,9 +119,10 @@ prediction.
 
 ## 2026-11-18: the 216 queue-order events are entry-order priority
 
-**Result: 217 unexplained to 0** on the 2020-01-30 extract, with the 2,023
-repriced remainders unchanged. (217 rather than 216: one event appears only
-after the repricing fix.) Under `--priority ref`: 140,350 match, 2,024
+**Result: 217 unexplained to 0** on the 2020-01-30 extract. (217 rather
+than 216: one event appears only after the repricing fix. With entry-order
+priority that event becomes a repriced remainder, so remainder_repriced goes
+from 2,023 to 2,024.) Under `--priority ref`: 140,350 match, 2,024
 remainder_repriced, 0 unexplained of 191,798 continuous events; exact match
 93.96% of displayed-book events (93.82% with plain FIFO). Every class change
 against `--priority feed` is an improvement (216 unexplained to match, 1 to
@@ -131,7 +132,7 @@ no late releases). Reconstruction stays clean: 0 unknown refs, 0 crossed
 books in continuous trading.
 
 **How it was found.** `nfe_trace` (new) prints an order's whole life. AAPL
-ref 10183329, which our book had at the head of the 32.05 bid, was added at
+ref 10183329, which our book had at the head of the 320.50 bid, was added at
 09:30:00.168, before the opening cross at 09:30:00.487. Refs 8293673,
 8555157 and 9423541, all lower, were first displayed at 09:30:01.469, all
 at the same nanosecond, after the cross. The feed then filled every one of
