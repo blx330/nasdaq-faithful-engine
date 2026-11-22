@@ -167,3 +167,26 @@ computes `ahead` from the order's real position. Unit test
 
 **Still open.** One day, five symbols. Rerun on the full day and other days
 before calling it general. FastBook does not implement the mode yet.
+
+## 2026-11-22: full-day run, and a weak spot in "0 unexplained"
+
+**Result.** The full 2020-01-30 day (423,285,709 messages, run as 4 symbol shards) has 0 unexplained of 6,874,975
+continuous events, 316,692 late inserts, all inside 09:30:00 to 09:30:40. I had predicted 0.04% unexplained and gave
+exact zero a 3% chance, so I distrusted it.
+
+**Why the zero was cheap.** `unexplained` is reachable only when the event has no P message and no printable C.
+Events with one of those were filed as `non_displayed` or `nondisplay_price` without checking the displayed fills
+(242,173 events). Added an audit that re-predicts them from displayed shares only.
+
+**First audit overstated the problem.** On the extract it flagged 2,668 events, 2,517 of them as price priority and
+151 as ties or quantity-only. Tracing MSFT ref 12460915 showed the real pattern: orders displayed at 173.98 execute at
+173.97 through printable C messages, so they sit at a better working price and fill ahead of the displayed queue.
+Two refinements: (1) the tie and quantity-only cases were the same mechanism charged to the wrong orders, so the test
+became constructive (take improved orders out, fill them first, require the remaining displayed fills to reproduce);
+(2) it demanded improved executions be no worse than every displayed fill, which wrongly rejected an improved order
+filling mid-sweep, so it now requires monotone execution prices over the whole sequence. After that: 0 residual on
+the extract, 0 on the full day (92,645 events reproduced), and with plain FIFO priority the residual goes back up
+(0 to 23), so the audit does discriminate.
+
+**Process notes.** The sandbox shell cannot run anything longer than about 170 s and cannot reach emi.nasdaq.com, hence
+the symbol shards. Git left lock files in `.git` because deletion is off in the connected folder; moved aside, not deleted.

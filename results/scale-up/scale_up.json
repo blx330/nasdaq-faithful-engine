@@ -1,0 +1,363 @@
+{
+ "late_inserts_total": 316692,
+ "symbols_with_late": 6564,
+ "symbols_total": 8915,
+ "late_with_open_cross": 316692,
+ "late_without_open_cross": 0,
+ "share_within_5s_of_own_open": 0.2217043689136448,
+ "share_within_15s_of_own_open": 0.34812688669117,
+ "share_within_40s_of_own_open": 1.0,
+ "share_within_45s_of_own_open": 1.0,
+ "share_within_60s_of_own_open": 1.0,
+ "share_within_120s_of_own_open": 1.0,
+ "share_before_own_open": 0.0,
+ "wall_0930_to_093045": 1.0,
+ "wall_before_0930": 0.0,
+ "late_after_093045_wall": 0,
+ "late_after_own_open_plus_45s": 0,
+ "symbols_with_open_cross": 8915,
+ "symbols_open_after_5s_wall": 0,
+ "symbols_open_after_60s_wall": 0,
+ "late_beyond_45s_by_symbol_top": {},
+ "late_beyond_45s_symbols": 0,
+ "late_beyond_45s_in_symbols_with_nonT_state": 0,
+ "late_beyond_45s_hour_hist": {},
+ "by_tier": {
+  "T1": {
+   "events": 829726,
+   "match": 592481,
+   "match_hidden": 25691,
+   "non_displayed": 18726,
+   "nondisplay_price": 15734,
+   "cross": 42011,
+   "grouping": 0,
+   "remainder_repriced": 5257,
+   "hidden_only": 129826,
+   "unexplained": 0,
+   "continuous": 787715,
+   "displayed": 657889,
+   "exact_displayed": 0.9396296336,
+   "hidden_share_cont": 0.2212005611,
+   "hidden_only_share": 0.164813416,
+   "nondisp_price_share": 0.0199742293,
+   "unexplained_rate": 0.0,
+   "adds": 33855503,
+   "late": 82590,
+   "late_per_1000_adds": 2.4394852441,
+   "symbols": 50
+  },
+  "T2": {
+   "events": 2126694,
+   "match": 1569704,
+   "match_hidden": 56380,
+   "non_displayed": 39191,
+   "nondisplay_price": 48595,
+   "cross": 53269,
+   "grouping": 0,
+   "remainder_repriced": 7093,
+   "hidden_only": 352462,
+   "unexplained": 0,
+   "continuous": 2073425,
+   "displayed": 1720963,
+   "exact_displayed": 0.9448686578,
+   "hidden_share_cont": 0.2160835333,
+   "hidden_only_share": 0.1699902336,
+   "nondisp_price_share": 0.0234370667,
+   "unexplained_rate": 0.0,
+   "adds": 74627400,
+   "late": 94289,
+   "late_per_1000_adds": 1.2634635536,
+   "symbols": 449
+  },
+  "T3": {
+   "events": 2789636,
+   "match": 2099028,
+   "match_hidden": 69582,
+   "non_displayed": 50583,
+   "nondisplay_price": 36398,
+   "cross": 21829,
+   "grouping": 0,
+   "remainder_repriced": 4018,
+   "hidden_only": 508198,
+   "unexplained": 0,
+   "continuous": 2767807,
+   "displayed": 2259609,
+   "exact_displayed": 0.9597279883,
+   "hidden_share_cont": 0.2270255838,
+   "hidden_only_share": 0.1836103457,
+   "nondisp_price_share": 0.0131504834,
+   "unexplained_rate": 0.0,
+   "adds": 53925221,
+   "late": 58162,
+   "late_per_1000_adds": 1.0785676706,
+   "symbols": 1490
+  },
+  "T4": {
+   "events": 1225126,
+   "match": 907375,
+   "match_hidden": 34124,
+   "non_displayed": 21314,
+   "nondisplay_price": 10958,
+   "cross": 10430,
+   "grouping": 0,
+   "remainder_repriced": 1015,
+   "hidden_only": 239910,
+   "unexplained": 0,
+   "continuous": 1214696,
+   "displayed": 974786,
+   "exact_displayed": 0.9658519921,
+   "hidden_share_cont": 0.2431456101,
+   "hidden_only_share": 0.1975062073,
+   "nondisp_price_share": 0.0090211872,
+   "unexplained_rate": 0.0,
+   "adds": 23594331,
+   "late": 63468,
+   "late_per_1000_adds": 2.6899681962,
+   "symbols": 3700
+  },
+  "T5": {
+   "events": 31881,
+   "match": 20277,
+   "match_hidden": 1482,
+   "non_displayed": 532,
+   "nondisplay_price": 142,
+   "cross": 549,
+   "grouping": 0,
+   "remainder_repriced": 7,
+   "hidden_only": 8892,
+   "unexplained": 0,
+   "continuous": 31332,
+   "displayed": 22440,
+   "exact_displayed": 0.9696524064,
+   "hidden_share_cont": 0.3480786416,
+   "hidden_only_share": 0.2837993106,
+   "nondisp_price_share": 0.0045321077,
+   "unexplained_rate": 0.0,
+   "adds": 608250,
+   "late": 18183,
+   "late_per_1000_adds": 29.8939580764,
+   "symbols": 1982
+  }
+ },
+ "release_symbols_with_min_late": 4964,
+ "release_delay_median_hist": {
+  "0-0.5": 3251,
+  "0.5-1": 70,
+  "1-1.5": 90,
+  "1.5-2": 73,
+  "2-3": 114,
+  "3-5": 220,
+  "5-8": 334,
+  "8-10": 178,
+  "10-11": 34,
+  "11-12": 89,
+  "12-15": 145,
+  "15-20": 181,
+  "20-30": 160,
+  "30-60": 25,
+  "60-120": 0
+ },
+ "release_delay_by_market_category": {
+  "A": {
+   "n": 174,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 0.0
+  },
+  "G": {
+   "n": 482,
+   "median_of_medians": 4.8115544485,
+   "p10": 0.0,
+   "p90": 16.727215139100004
+  },
+  "N": {
+   "n": 2038,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 0.0
+  },
+  "P": {
+   "n": 498,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 0.0
+  },
+  "Q": {
+   "n": 940,
+   "median_of_medians": 9.274875807,
+   "p10": 0.7332291355999999,
+   "p90": 23.208671531100002
+  },
+  "S": {
+   "n": 754,
+   "median_of_medians": 2.21166793,
+   "p10": 0.0,
+   "p90": 11.266380701900003
+  },
+  "Z": {
+   "n": 78,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 0.0
+  }
+ },
+ "release_delay_by_tier": {
+  "T1": {
+   "n": 31,
+   "median_of_medians": 26.17428474,
+   "p10": 0.0,
+   "p90": 34.374665894
+  },
+  "T2": {
+   "n": 355,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 24.44752073720001
+  },
+  "T3": {
+   "n": 1025,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 19.837447092
+  },
+  "T4": {
+   "n": 2120,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 11.2036111018
+  },
+  "T5": {
+   "n": 1433,
+   "median_of_medians": 0.0,
+   "p10": 0.0,
+   "p90": 4.060740422499998
+  }
+ },
+ "release_delay_by_etp": {
+  "N": {
+   "n": 4258,
+   "median_of_medians": 0.0
+  },
+  "Y": {
+   "n": 706,
+   "median_of_medians": 0.0
+  }
+ },
+ "late_by_market_category": {
+  "A": {
+   "adds": 651484,
+   "late": 2143,
+   "per_1000": 3.289
+  },
+  "G": {
+   "adds": 17331760,
+   "late": 30648,
+   "per_1000": 1.768
+  },
+  "N": {
+   "adds": 65746257,
+   "late": 30786,
+   "per_1000": 0.468
+  },
+  "P": {
+   "adds": 53067130,
+   "late": 5609,
+   "per_1000": 0.106
+  },
+  "Q": {
+   "adds": 44025805,
+   "late": 215436,
+   "per_1000": 4.893
+  },
+  "S": {
+   "adds": 2053519,
+   "late": 31213,
+   "per_1000": 15.2
+  },
+  "V": {
+   "adds": 6,
+   "late": 0,
+   "per_1000": 0.0
+  },
+  "Z": {
+   "adds": 3734744,
+   "late": 857,
+   "per_1000": 0.229
+  }
+ },
+ "eta2_market_category": 0.4478056541843993,
+ "eta2_tier": 0.11329827109945967,
+ "eta2_etp": 0.011700425235145282,
+ "late_top10": [
+  {
+   "symbol": "AMZN",
+   "tier": "T2",
+   "market_category": "Q",
+   "adds": 284762,
+   "late": 22286
+  },
+  {
+   "symbol": "TSLA",
+   "tier": "T1",
+   "market_category": "Q",
+   "adds": 422317,
+   "late": 14931
+  },
+  {
+   "symbol": "AAPL",
+   "tier": "T1",
+   "market_category": "Q",
+   "adds": 907157,
+   "late": 13409
+  },
+  {
+   "symbol": "MSFT",
+   "tier": "T1",
+   "market_category": "Q",
+   "adds": 842425,
+   "late": 12583
+  },
+  {
+   "symbol": "FB",
+   "tier": "T1",
+   "market_category": "Q",
+   "adds": 568178,
+   "late": 9646
+  },
+  {
+   "symbol": "BYND",
+   "tier": "T2",
+   "market_category": "Q",
+   "adds": 108949,
+   "late": 6425
+  },
+  {
+   "symbol": "AMD",
+   "tier": "T1",
+   "market_category": "Q",
+   "adds": 1112128,
+   "late": 6334
+  },
+  {
+   "symbol": "CSCO",
+   "tier": "T1",
+   "market_category": "Q",
+   "adds": 519886,
+   "late": 5967
+  },
+  {
+   "symbol": "NFLX",
+   "tier": "T2",
+   "market_category": "Q",
+   "adds": 220851,
+   "late": 4995
+  },
+  {
+   "symbol": "NVDA",
+   "tier": "T2",
+   "market_category": "Q",
+   "adds": 243828,
+   "late": 4367
+  }
+ ]
+}

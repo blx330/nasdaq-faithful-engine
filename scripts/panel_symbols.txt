@@ -1,0 +1,8 @@
+# 20-symbol liquidity panel chosen by rule from 2020-01-30 message counts (docs/predictions-scale-up.md),
+# 5 per tier at evenly spaced positions in the tier; plus the original five extract symbols as a bridge.
+# tier 1 (ranks 1-50):    DIA,MU,GOOG,SMH,RDS.A
+# tier 2 (ranks 51-500):  SAP,OXY,VYM,IVZ,CVE
+# tier 3 (ranks 501-2000): OLED,DSI,LEG,LXP,CACC
+# tier 4 (rank 2001+, >= 2000 msgs): PLW,GNPX,LINX,FCAL,MLR
+# bridge: AAPL,MSFT,SPY,QQQ,F
+DIA,MU,GOOG,SMH,RDS.A,SAP,OXY,VYM,IVZ,CVE,OLED,DSI,LEG,LXP,CACC,PLW,GNPX,LINX,FCAL,MLR,AAPL,MSFT,SPY,QQQ,F

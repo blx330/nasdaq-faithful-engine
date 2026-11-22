@@ -1,0 +1,400 @@
+audit nondisplay_price MSFT loc=5294 ts=34200581820589 aggressor=B displayed_qty=20 limit=1739800 cat=0 recon=1
+  feed 12460871 7@1739800 exec=1739700 type=C printable=1 late=0 age_ns=81136
+  feed 12460947 13@1739800 exec=1739700 type=C printable=1 late=0 age_ns=16668
+  pred 12460871 7@1739800 late=0 age_ns=81136
+  pred 12460915 13@1739800 late=0 age_ns=39136
+audit nondisplay_price MSFT loc=5294 ts=34200581957828 aggressor=B displayed_qty=65 limit=1739800 cat=0 recon=1
+  feed 12460947 12@1739800 exec=1739700 type=C printable=1 late=0 age_ns=153907
+  feed 12460959 53@1739800 exec=1739700 type=C printable=1 late=0 age_ns=146343
+  pred 12460915 65@1739800 late=0 age_ns=176375
+audit nondisplay_price MSFT loc=5294 ts=34200582006181 aggressor=B displayed_qty=2 limit=1739800 cat=0 recon=1
+  feed 12460959 2@1739800 exec=1739700 type=C printable=1 late=0 age_ns=194696
+  pred 12460915 2@1739800 late=0 age_ns=224728
+audit nondisplay_price MSFT loc=5294 ts=34200582013690 aggressor=B displayed_qty=300 limit=1739800 cat=0 recon=1
+  feed 12460959 4@1739800 exec=1739700 type=C printable=1 late=0 age_ns=202205
+  feed 12460983 100@1739800 exec=1739700 type=C printable=1 late=0 age_ns=190941
+  feed 12461127 196@1739800 exec=1739700 type=C printable=1 late=0 age_ns=73722
+  pred 12460915 83@1739800 late=0 age_ns=232237
+  pred 12460959 4@1739800 late=0 age_ns=202205
+  pred 12460983 100@1739800 late=0 age_ns=190941
+  pred 12461095 100@1739800 late=0 age_ns=101965
+  pred 12461127 13@1739800 late=0 age_ns=73722
+audit nondisplay_price MSFT loc=5294 ts=34200582026007 aggressor=B displayed_qty=60 limit=1739800 cat=0 recon=1
+  feed 12461131 50@1739800 exec=1739700 type=C printable=1 late=0 age_ns=84258
+  feed 12461135 10@1739800 exec=1739700 type=C printable=1 late=0 age_ns=83047
+  pred 12460915 60@1739800 late=0 age_ns=244554
+audit nondisplay_price MSFT loc=5294 ts=34200582026007 aggressor=B displayed_qty=140 limit=1739800 cat=0 recon=1
+  feed 12461151 100@1739800 exec=1739700 type=C printable=1 late=0 age_ns=73948
+  feed 12461159 2@1739800 exec=1739700 type=C printable=1 late=0 age_ns=66313
+  feed 12461195 38@1739800 exec=1739700 type=C printable=1 late=0 age_ns=22237
+  pred 12460915 83@1739800 late=0 age_ns=244554
+  pred 12461095 57@1739800 late=0 age_ns=114282
+audit nondisplay_price MSFT loc=5294 ts=34200582048282 aggressor=B displayed_qty=21 limit=1739800 cat=0 recon=1
+  feed 12461195 21@1739800 exec=1739700 type=C printable=1 late=0 age_ns=44512
+  pred 12460915 21@1739800 late=0 age_ns=266829
+audit nondisplay_price MSFT loc=5294 ts=34200582051600 aggressor=B displayed_qty=21 limit=1739800 cat=0 recon=1
+  feed 12461195 21@1739800 exec=1739700 type=C printable=1 late=0 age_ns=47830
+  pred 12460915 21@1739800 late=0 age_ns=270147
+audit nondisplay_price MSFT loc=5294 ts=34200582057031 aggressor=B displayed_qty=150 limit=1739800 cat=0 recon=1
+  feed 12461195 70@1739800 exec=1739700 type=C printable=1 late=0 age_ns=53261
+  feed 12461203 2@1739800 exec=1739700 type=C printable=1 late=0 age_ns=49347
+  feed 12461207 78@1739800 exec=1739700 type=C printable=1 late=0 age_ns=46910
+  pred 12460915 83@1739800 late=0 age_ns=275578
+  pred 12461095 67@1739800 late=0 age_ns=145306
+audit nondisplay_price MSFT loc=5294 ts=34200582060748 aggressor=B displayed_qty=25 limit=1739800 cat=0 recon=1
+  feed 12461207 25@1739800 exec=1739700 type=C printable=1 late=0 age_ns=50627
+  pred 12460915 25@1739800 late=0 age_ns=279295
+audit nondisplay_price MSFT loc=5294 ts=34200582219995 aggressor=B displayed_qty=1 limit=1739800 cat=0 recon=1
+  feed 12461207 1@1739800 exec=1739700 type=C printable=1 late=0 age_ns=209874
+  pred 12460915 1@1739800 late=0 age_ns=438542
+audit nondisplay_price MSFT loc=5294 ts=34200582225687 aggressor=B displayed_qty=30 limit=1739800 cat=0 recon=1
+  feed 12461207 30@1739800 exec=1739700 type=C printable=1 late=0 age_ns=215566
+  pred 12460915 30@1739800 late=0 age_ns=444234
+audit nondisplay_price MSFT loc=5294 ts=34200582244505 aggressor=B displayed_qty=60 limit=1739800 cat=0 recon=1
+  feed 12461207 60@1739800 exec=1739700 type=C printable=1 late=0 age_ns=234384
+  pred 12460915 60@1739800 late=0 age_ns=463052
+audit nondisplay_price MSFT loc=5294 ts=34200582248806 aggressor=B displayed_qty=23 limit=1739800 cat=0 recon=1
+  feed 12461207 23@1739800 exec=1739700 type=C printable=1 late=0 age_ns=238685
+  pred 12460915 23@1739800 late=0 age_ns=467353
+audit nondisplay_price MSFT loc=5294 ts=34200582255110 aggressor=B displayed_qty=12 limit=1739800 cat=0 recon=1
+  feed 12461207 12@1739800 exec=1739700 type=C printable=1 late=0 age_ns=244989
+  pred 12460915 12@1739800 late=0 age_ns=473657
+audit nondisplay_price MSFT loc=5294 ts=34200582261155 aggressor=B displayed_qty=20 limit=1739800 cat=0 recon=1
+  feed 12461207 20@1739800 exec=1739700 type=C printable=1 late=0 age_ns=251034
+  pred 12460915 20@1739800 late=0 age_ns=479702
+audit nondisplay_price MSFT loc=5294 ts=34200582336514 aggressor=B displayed_qty=80 limit=1739800 cat=0 recon=1
+  feed 12461207 80@1739800 exec=1739700 type=C printable=1 late=0 age_ns=326393
+  pred 12460915 80@1739800 late=0 age_ns=555061
+audit nondisplay_price MSFT loc=5294 ts=34200589100058 aggressor=B displayed_qty=100 limit=1739800 cat=0 recon=1
+  feed 12461207 71@1739800 exec=1739700 type=C printable=1 late=0 age_ns=7089937
+  feed 12461223 24@1739800 exec=1739700 type=C printable=1 late=0 age_ns=7072018
+  feed 12461231 5@1739800 exec=1739700 type=C printable=1 late=0 age_ns=7059214
+  pred 12461095 100@1739800 late=0 age_ns=7188333
+audit nondisplay_price MSFT loc=5294 ts=34200600469202 aggressor=B displayed_qty=300 limit=1739300 cat=0 recon=1
+  feed 12467379 300@1739300 exec=1739200 type=C printable=1 late=0 age_ns=12026
+  pred 12466627 150@1739300 late=0 age_ns=1997611
+  pred 12466639 150@1739300 late=0 age_ns=1982772
+audit nondisplay_price MSFT loc=5294 ts=34200601718967 aggressor=B displayed_qty=100 limit=1739300 cat=0 recon=1
+  feed 12467379 100@1739300 exec=1739200 type=C printable=1 late=0 age_ns=1261791
+  pred 12466927 12@1739300 late=0 age_ns=2527803
+  pred 12466999 60@1739300 late=0 age_ns=2363637
+  pred 12467379 28@1739300 late=0 age_ns=1261791
+audit nondisplay_price MSFT loc=5294 ts=34200601722155 aggressor=B displayed_qty=5 limit=1739300 cat=0 recon=1
+  feed 12467379 5@1739300 exec=1739200 type=C printable=1 late=0 age_ns=1264979
+  pred 12466927 5@1739300 late=0 age_ns=2530991
+audit nondisplay_price MSFT loc=5294 ts=34200601798194 aggressor=B displayed_qty=200 limit=1739300 cat=0 recon=1
+  feed 12467379 200@1739300 exec=1739200 type=C printable=1 late=0 age_ns=1341018
+  pred 12466927 12@1739300 late=0 age_ns=2607030
+  pred 12466999 60@1739300 late=0 age_ns=2442864
+  pred 12467379 128@1739300 late=0 age_ns=1341018
+audit nondisplay_price MSFT loc=5294 ts=34200601861075 aggressor=B displayed_qty=1390 limit=1739300 cat=4 recon=1
+  feed 12467379 334@1739300 exec=1739200 type=C printable=1 late=0 age_ns=1403899
+  feed 12467459 592@1739300 exec=1739200 type=C printable=1 late=0 age_ns=1156186
+  feed 12467479 220@1739300 exec=1739200 type=C printable=1 late=0 age_ns=1071498
+  feed 12467591 20@1739300 exec=1739200 type=C printable=1 late=0 age_ns=725746
+  feed 12467643 150@1739300 exec=1739200 type=C printable=1 late=0 age_ns=666780
+  feed 12467671 2@1739300 exec=1739200 type=C printable=1 late=0 age_ns=533253
+  feed 12466927 12@1739300 exec=1739300 type=E printable=1 late=0 age_ns=2669911
+  feed 12466999 60@1739300 exec=1739300 type=E printable=1 late=0 age_ns=2505745
+  pred 12466927 12@1739300 late=0 age_ns=2669911
+  pred 12466999 60@1739300 late=0 age_ns=2505745
+  pred 12467379 334@1739300 late=0 age_ns=1403899
+  pred 12467459 592@1739300 late=0 age_ns=1156186
+  pred 12467479 220@1739300 late=0 age_ns=1071498
+  pred 12467591 20@1739300 late=0 age_ns=725746
+  pred 12467643 150@1739300 late=0 age_ns=666780
+  pred 12467671 2@1739300 late=0 age_ns=533253
+audit nondisplay_price AGNC loc=187 ts=34200696486936 aggressor=B displayed_qty=100 limit=186900 cat=0 recon=1
+  feed 10410281 100@186900 exec=186800 type=C printable=1 late=0 age_ns=5462301
+  pred 7572713 100@186900 late=0 age_ns=124545609
+audit nondisplay_price IWM loc=4321 ts=34201073568174 aggressor=B displayed_qty=100 limit=1627800 cat=0 recon=1
+  feed 8704610 100@1627800 exec=1627700 type=C printable=1 late=0 age_ns=4996873
+  pred 8704158 100@1627800 late=0 age_ns=7720833
+audit nondisplay_price IWM loc=4321 ts=34201094967194 aggressor=S displayed_qty=100 limit=1627800 cat=0 recon=1
+  feed 8710334 100@1627800 exec=1627900 type=C printable=1 late=0 age_ns=38605
+  pred 8710318 100@1627800 late=0 age_ns=73202
+audit nondisplay_price BRKS loc=1028 ts=34201239178083 aggressor=S displayed_qty=1 limit=389800 cat=0 recon=1
+  feed 10599713 1@389800 exec=389900 type=C printable=1 late=0 age_ns=26810
+  pred 10599533 1@389800 late=0 age_ns=492646
+audit nondisplay_price GPOR loc=3477 ts=34201296537901 aggressor=S displayed_qty=100 limit=15200 cat=0 recon=1
+  feed 8760506 100@15200 exec=15300 type=C printable=1 late=0 age_ns=3272452
+  pred 2275566 100@15200 late=0 age_ns=469133724
+audit nondisplay_price GPOR loc=3477 ts=34201300556685 aggressor=S displayed_qty=100 limit=15200 cat=0 recon=1
+  feed 8760506 100@15200 exec=15300 type=C printable=1 late=0 age_ns=7291236
+  pred 2275566 100@15200 late=0 age_ns=473152508
+audit nondisplay_price GPOR loc=3477 ts=34201302171729 aggressor=S displayed_qty=100 limit=15200 cat=0 recon=1
+  feed 8760506 100@15200 exec=15300 type=C printable=1 late=0 age_ns=8906280
+  pred 2275566 100@15200 late=0 age_ns=474767552
+audit nondisplay_price GPOR loc=3477 ts=34201304736324 aggressor=S displayed_qty=100 limit=15200 cat=0 recon=1
+  feed 8763350 100@15200 exec=15300 type=C printable=1 late=0 age_ns=1162796
+  pred 2275566 100@15200 late=0 age_ns=477332147
+audit nondisplay_price GPOR loc=3477 ts=34201305942599 aggressor=S displayed_qty=100 limit=15200 cat=0 recon=1
+  feed 8763358 100@15200 exec=15300 type=C printable=1 late=0 age_ns=2346346
+  pred 2275566 100@15200 late=0 age_ns=478538422
+audit nondisplay_price CHMA loc=1410 ts=34201338890414 aggressor=B displayed_qty=50 limit=47600 cat=0 recon=1
+  feed 10517989 50@47600 exec=47500 type=C printable=1 late=0 age_ns=304585063
+  pred 10192057 50@47600 late=0 age_ns=1147297353
+audit nondisplay_price CHMA loc=1410 ts=34201338913536 aggressor=B displayed_qty=129 limit=47600 cat=0 recon=1
+  feed 10517989 129@47600 exec=47500 type=C printable=1 late=0 age_ns=304608185
+  pred 10192057 100@47600 late=0 age_ns=1147320475
+  pred 10517989 29@47600 late=0 age_ns=304608185
+audit nondisplay_price CHMA loc=1410 ts=34201495769490 aggressor=B displayed_qty=117 limit=47600 cat=4 recon=1
+  feed 10517989 22@47600 exec=47500 type=C printable=1 late=0 age_ns=461464139
+  feed 10192057 95@47600 exec=47600 type=E printable=1 late=0 age_ns=1304176429
+  pred 10192057 100@47600 late=0 age_ns=1304176429
+  pred 10517989 17@47600 late=0 age_ns=461464139
+audit nondisplay_price VYMI loc=8525 ts=34202009563570 aggressor=S displayed_qty=2 limit=617200 cat=0 recon=1
+  feed 17046192 2@617200 exec=617300 type=C printable=1 late=0 age_ns=76272
+  pred 12325312 2@617200 late=0 age_ns=856278670
+audit nondisplay_price VYMI loc=8525 ts=34202009867447 aggressor=S displayed_qty=90 limit=617200 cat=0 recon=1
+  feed 17046192 90@617200 exec=617300 type=C printable=1 late=0 age_ns=380149
+  pred 12325312 90@617200 late=0 age_ns=856582547
+audit nondisplay_price HBAN loc=3629 ts=34202049141650 aggressor=B displayed_qty=10 limit=134000 cat=0 recon=1
+  feed 8928486 10@134000 exec=133900 type=C printable=1 late=0 age_ns=1351677
+  pred 8927086 10@134000 late=0 age_ns=5510890
+audit nondisplay_price HBAN loc=3629 ts=34202050236184 aggressor=B displayed_qty=10 limit=134000 cat=0 recon=1
+  feed 8928486 10@134000 exec=133900 type=C printable=1 late=0 age_ns=2446211
+  pred 8927086 10@134000 late=0 age_ns=6605424
+audit nondisplay_price HBAN loc=3629 ts=34202083894357 aggressor=B displayed_qty=1300 limit=134000 cat=4 recon=1
+  feed 8928486 80@134000 exec=133900 type=C printable=1 late=0 age_ns=36104384
+  feed 8927086 500@134000 exec=134000 type=E printable=1 late=0 age_ns=40263597
+  feed 8933598 374@134000 exec=134000 type=E printable=1 late=0 age_ns=18694542
+  feed 8933834 346@134000 exec=134000 type=E printable=1 late=0 age_ns=17561419
+  pred 8927086 500@134000 late=0 age_ns=40263597
+  pred 8928486 80@134000 late=0 age_ns=36104384
+  pred 8933598 374@134000 late=0 age_ns=18694542
+  pred 8933834 346@134000 late=0 age_ns=17561419
+audit nondisplay_price RF loc=6702 ts=34202172543146 aggressor=S displayed_qty=1152 limit=152300 cat=4 recon=1
+  feed 12677195 100@152300 exec=152400 type=C printable=1 late=0 age_ns=748579227
+  feed 12604815 200@152300 exec=152300 type=E printable=1 late=0 age_ns=1062409634
+  feed 12612183 100@152300 exec=152300 type=E printable=1 late=0 age_ns=1039658921
+  feed 12662451 752@152300 exec=152300 type=E printable=1 late=0 age_ns=836806125
+  pred 12604815 200@152300 late=0 age_ns=1062409634
+  pred 12612183 100@152300 late=0 age_ns=1039658921
+  pred 12662451 852@152300 late=0 age_ns=836806125
+audit nondisplay_price S loc=6935 ts=34202809660704 aggressor=S displayed_qty=100 limit=45000 cat=0 recon=1
+  feed 12602759 100@45000 exec=45100 type=C printable=1 late=0 age_ns=1708634881
+  pred 3340275 100@45000 late=0 age_ns=9002381096320
+audit nondisplay_price BP loc=996 ts=34206209367596 aggressor=B displayed_qty=372 limit=368400 cat=0 recon=1
+  feed 11061745 372@368400 exec=368300 type=C printable=1 late=0 age_ns=42509289
+  pred 10036277 372@368400 late=0 age_ns=10126368392
+audit nondisplay_price WMB loc=8635 ts=34209646241540 aggressor=B displayed_qty=200 limit=211300 cat=0 recon=1
+  feed 17445948 200@211300 exec=211200 type=C printable=1 late=0 age_ns=526563282
+  pred 17435520 100@211300 late=0 age_ns=917951561
+  pred 17444252 100@211300 late=0 age_ns=601455606
+audit nondisplay_price WMB loc=8635 ts=34209872568342 aggressor=B displayed_qty=100 limit=211300 cat=0 recon=1
+  feed 17445948 100@211300 exec=211200 type=C printable=1 late=0 age_ns=752890084
+  pred 17435520 100@211300 late=0 age_ns=1144278363
+audit nondisplay_price GDX loc=3279 ts=34210170585695 aggressor=B displayed_qty=100 limit=288800 cat=0 recon=1
+  feed 9386774 100@288800 exec=288700 type=C printable=1 late=0 age_ns=2614689
+  pred 9386734 100@288800 late=0 age_ns=2869877
+audit nondisplay_price WMB loc=8635 ts=34210646772993 aggressor=B displayed_qty=200 limit=211300 cat=0 recon=1
+  feed 17511996 100@211300 exec=211200 type=C printable=1 late=0 age_ns=42979449
+  feed 17512000 100@211300 exec=211200 type=C printable=1 late=0 age_ns=42974671
+  pred 17435520 100@211300 late=0 age_ns=1918483014
+  pred 17444252 100@211300 late=0 age_ns=1601987059
+audit nondisplay_price IWM loc=4321 ts=34212043779872 aggressor=B displayed_qty=100 limit=1629300 cat=0 recon=1
+  feed 9480654 100@1629300 exec=1629200 type=C printable=1 late=0 age_ns=57001
+  pred 9480534 100@1629300 late=0 age_ns=3731152
+audit nondisplay_price WMB loc=8635 ts=34212675609690 aggressor=B displayed_qty=100 limit=211300 cat=0 recon=1
+  feed 17597432 100@211300 exec=211200 type=C printable=1 late=0 age_ns=820327
+  pred 17435520 100@211300 late=0 age_ns=3947319711
+audit nondisplay_price WMB loc=8635 ts=34213933621082 aggressor=B displayed_qty=100 limit=211300 cat=0 recon=1
+  feed 17636544 100@211300 exec=211200 type=C printable=1 late=0 age_ns=258962016
+  pred 17435520 100@211300 late=0 age_ns=5205331103
+audit nondisplay_price XOM loc=8776 ts=34214745098480 aggressor=S displayed_qty=104 limit=636900 cat=1 recon=1
+  feed 17678712 100@636900 exec=637000 type=C printable=1 late=0 age_ns=26203
+  feed 17678648 4@636900 exec=636900 type=E printable=1 late=0 age_ns=350866
+  pred 17678648 4@636900 late=0 age_ns=350866
+  pred 17678688 100@636900 late=0 age_ns=54210
+audit nondisplay_price GLD loc=3365 ts=34215001867326 aggressor=B displayed_qty=25 limit=1486500 cat=0 recon=1
+  feed 9587830 25@1486500 exec=1486400 type=C printable=1 late=0 age_ns=41881884
+  pred 9373542 25@1486500 late=0 age_ns=5000562437
+audit nondisplay_price MSFT loc=5294 ts=34215143220224 aggressor=S displayed_qty=200 limit=1732100 cat=1 recon=1
+  feed 13535915 100@1732100 exec=1732200 type=C printable=1 late=0 age_ns=5752929
+  feed 10903887 100@1732100 exec=1732100 type=E printable=1 late=0 age_ns=285478428070
+  pred 10903887 100@1732100 late=0 age_ns=285478428070
+  pred 12672587 2@1732100 late=0 age_ns=13742451677
+  pred 13478787 98@1732100 late=0 age_ns=1573130013
+audit nondisplay_price RUN loc=6876 ts=34215731579466 aggressor=S displayed_qty=100 limit=178600 cat=0 recon=1
+  feed 13552491 100@178600 exec=178700 type=C printable=1 late=0 age_ns=81637155
+  pred 13552479 100@178600 late=0 age_ns=81677320
+audit nondisplay_price GE loc=3281 ts=34216054029208 aggressor=B displayed_qty=1800 limit=129000 cat=4 recon=1
+  feed 9609338 100@129000 exec=128900 type=C printable=1 late=0 age_ns=433562048
+  feed 9607614 100@129000 exec=129000 type=E printable=1 late=0 age_ns=533683887
+  feed 9607630 1600@129000 exec=129000 type=E printable=1 late=0 age_ns=533647327
+  pred 9607614 100@129000 late=0 age_ns=533683887
+  pred 9607630 1600@129000 late=0 age_ns=533647327
+  pred 9609338 100@129000 late=0 age_ns=433562048
+audit nondisplay_price TSLA loc=8000 ts=34216381127870 aggressor=S displayed_qty=25 limit=6292700 cat=4 recon=1
+  feed 17742948 8@6292700 exec=6292800 type=C printable=1 late=0 age_ns=5255
+  feed 17742880 17@6292700 exec=6292700 type=E printable=1 late=0 age_ns=68031
+  pred 17742880 25@6292700 late=0 age_ns=68031
+audit nondisplay_price PBR loc=6030 ts=34220296806882 aggressor=B displayed_qty=100 limit=141000 cat=0 recon=1
+  feed 13703227 100@141000 exec=140900 type=C printable=1 late=0 age_ns=2245378
+  pred 13693035 100@141000 late=0 age_ns=188107973
+audit nondisplay_price OILD loc=5830 ts=34220401437281 aggressor=S displayed_qty=1600 limit=162700 cat=1 recon=1
+  feed 13706831 1200@162700 exec=162800 type=C printable=1 late=0 age_ns=13535642
+  feed 13697507 400@162700 exec=162700 type=E printable=1 late=0 age_ns=220107382
+  pred 13697507 1200@162700 late=0 age_ns=220107382
+  pred 13697511 400@162700 late=0 age_ns=220107072
+audit nondisplay_price MSFT loc=5294 ts=34224893687416 aggressor=B displayed_qty=75 limit=1731200 cat=0 recon=1
+  feed 13876119 75@1731200 exec=1731100 type=C printable=1 late=0 age_ns=14659
+  pred 13876079 75@1731200 late=0 age_ns=41238
+audit nondisplay_price IWM loc=4321 ts=34225006155957 aggressor=B displayed_qty=100 limit=1630000 cat=0 recon=1
+  feed 9930610 100@1630000 exec=1629900 type=C printable=1 late=0 age_ns=4945924
+  pred 9927022 100@1630000 late=0 age_ns=112776734
+audit nondisplay_price IWM loc=4321 ts=34225006991287 aggressor=S displayed_qty=100 limit=1629900 cat=0 recon=1
+  feed 9930814 100@1629900 exec=1630000 type=C printable=1 late=0 age_ns=609745
+  pred 9930786 100@1629900 late=0 age_ns=848027
+audit nondisplay_price X loc=8720 ts=34226208145623 aggressor=S displayed_qty=100 limit=91500 cat=0 recon=1
+  feed 18116072 100@91500 exec=91600 type=C printable=1 late=0 age_ns=2506389
+  pred 17482644 100@91500 late=0 age_ns=16128647184
+audit non_displayed WMB loc=8635 ts=34226953256575 aggressor=S displayed_qty=200 limit=211400 cat=0 recon=1
+  feed 18138988 200@211400 exec=211500 type=C printable=1 late=0 age_ns=165094882
+  pred 18049276 100@211400 late=0 age_ns=2171960136
+  pred 18138964 100@211400 late=0 age_ns=166396860
+audit nondisplay_price NOG loc=5598 ts=34227881301912 aggressor=B displayed_qty=100 limit=16800 cat=0 recon=1
+  feed 13990799 100@16800 exec=16700 type=C printable=1 late=0 age_ns=451435154
+  pred 12985807 100@16800 late=0 age_ns=24560405217
+audit nondisplay_price PBR loc=6030 ts=34231237633578 aggressor=S displayed_qty=100 limit=140700 cat=0 recon=1
+  feed 14110231 100@140700 exec=140800 type=C printable=1 late=0 age_ns=952202926
+  pred 13640379 100@140700 late=0 age_ns=12860196676
+audit nondisplay_price EWU loc=2673 ts=34235247313843 aggressor=B displayed_qty=900 limit=329300 cat=0 recon=1
+  feed 10287838 900@329300 exec=329200 type=C printable=1 late=0 age_ns=216921128
+  pred 9995510 900@329300 late=0 age_ns=8918225558
+audit nondisplay_price IWM loc=4321 ts=34236849760361 aggressor=B displayed_qty=100 limit=1629000 cat=0 recon=1
+  feed 10347110 100@1629000 exec=1628900 type=C printable=1 late=0 age_ns=11603970
+  pred 10328426 100@1629000 late=0 age_ns=815487464
+audit nondisplay_price HYG loc=3888 ts=34238009335452 aggressor=B displayed_qty=300 limit=875500 cat=0 recon=1
+  feed 10379382 300@875500 exec=875400 type=C printable=1 late=0 age_ns=2115751
+  pred 10257550 300@875500 late=0 age_ns=3953381087
+audit nondisplay_price NI loc=5531 ts=34240279283129 aggressor=S displayed_qty=200 limit=291900 cat=0 recon=1
+  feed 14444075 100@291900 exec=292000 type=C printable=1 late=0 age_ns=409441
+  feed 14444079 100@291900 exec=292000 type=C printable=1 late=0 age_ns=398426
+  pred 14444063 100@291900 late=0 age_ns=474210
+  pred 14444071 100@291900 late=0 age_ns=430571
+audit nondisplay_price XLV loc=8764 ts=34240383117330 aggressor=S displayed_qty=100 limit=1011400 cat=0 recon=1
+  feed 18613728 100@1011400 exec=1011500 type=C printable=1 late=0 age_ns=372030
+  pred 18613708 100@1011400 late=0 age_ns=426063
+audit nondisplay_price GDX loc=3279 ts=34241452334584 aggressor=B displayed_qty=100 limit=288900 cat=0 recon=1
+  feed 10495894 100@288900 exec=288800 type=C printable=1 late=0 age_ns=581823
+  pred 9385774 100@288900 late=0 age_ns=31296447984
+audit nondisplay_price NOG loc=5598 ts=34243663075073 aggressor=S displayed_qty=22 limit=16500 cat=0 recon=1
+  feed 14507219 22@16500 exec=16600 type=C printable=1 late=0 age_ns=1614918538
+  pred 12286043 22@16500 late=0 age_ns=43515558522
+audit nondisplay_price WMB loc=8635 ts=34243729543373 aggressor=B displayed_qty=100 limit=211200 cat=0 recon=1
+  feed 18748880 100@211200 exec=211100 type=C printable=1 late=0 age_ns=5222734
+  pred 18748844 100@211200 late=0 age_ns=5329940
+audit nondisplay_price WMB loc=8635 ts=34243729615335 aggressor=B displayed_qty=100 limit=211200 cat=0 recon=1
+  feed 18748880 100@211200 exec=211100 type=C printable=1 late=0 age_ns=5294696
+  pred 18748844 100@211200 late=0 age_ns=5401902
+audit nondisplay_price WMB loc=8635 ts=34243729870974 aggressor=B displayed_qty=100 limit=211200 cat=0 recon=1
+  feed 18748924 100@211200 exec=211100 type=C printable=1 late=0 age_ns=4857583
+  pred 18748844 100@211200 late=0 age_ns=5657541
+audit nondisplay_price ISBC loc=4255 ts=34244079644650 aggressor=B displayed_qty=100 limit=118400 cat=0 recon=1
+  feed 10591214 100@118400 exec=118300 type=C printable=1 late=0 age_ns=438577
+  pred 10591202 100@118400 late=0 age_ns=519027
+audit nondisplay_price GE loc=3281 ts=34245864398057 aggressor=B displayed_qty=100 limit=129400 cat=0 recon=1
+  feed 10611654 100@129400 exec=129300 type=C printable=1 late=0 age_ns=1072671698
+  pred 6343170 100@129400 late=0 age_ns=980762021759
+audit nondisplay_price NOG loc=5598 ts=34247416678061 aggressor=S displayed_qty=278 limit=16500 cat=0 recon=1
+  feed 14507219 278@16500 exec=16600 type=C printable=1 late=0 age_ns=5368521526
+  pred 12286043 100@16500 late=0 age_ns=47269161510
+  pred 12327191 100@16500 late=0 age_ns=47160236769
+  pred 13990691 78@16500 late=0 age_ns=19992714070
+audit nondisplay_price AAL loc=6 ts=34250098865122 aggressor=S displayed_qty=100 limit=264800 cat=0 recon=1
+  feed 12413961 100@264800 exec=264900 type=C printable=1 late=0 age_ns=324757
+  pred 12413901 100@264800 late=0 age_ns=463077
+audit nondisplay_price FITB loc=2884 ts=34254061960411 aggressor=B displayed_qty=46 limit=283300 cat=0 recon=1
+  feed 10875462 46@283300 exec=283200 type=C printable=1 late=0 age_ns=13639625
+  pred 10875450 46@283300 late=0 age_ns=13677385
+audit nondisplay_price FITB loc=2884 ts=34254062084165 aggressor=B displayed_qty=50 limit=283300 cat=0 recon=1
+  feed 10875462 50@283300 exec=283200 type=C printable=1 late=0 age_ns=13763379
+  pred 10875450 50@283300 late=0 age_ns=13801139
+audit nondisplay_price FITB loc=2884 ts=34254062449733 aggressor=B displayed_qty=4 limit=283300 cat=0 recon=1
+  feed 10875462 4@283300 exec=283200 type=C printable=1 late=0 age_ns=14128947
+  pred 10875450 4@283300 late=0 age_ns=14166707
+audit nondisplay_price FITB loc=2884 ts=34254063509546 aggressor=B displayed_qty=100 limit=283300 cat=0 recon=1
+  feed 10877106 100@283300 exec=283200 type=C printable=1 late=0 age_ns=129700
+  pred 10875450 100@283300 late=0 age_ns=15226520
+audit nondisplay_price MSFT loc=5294 ts=34255240042351 aggressor=B displayed_qty=10 limit=1728900 cat=0 recon=1
+  feed 14942331 10@1728900 exec=1728800 type=C printable=1 late=0 age_ns=26547
+  pred 14942319 10@1728900 late=0 age_ns=43947
+audit nondisplay_price NI loc=5531 ts=34257144860037 aggressor=B displayed_qty=230 limit=292000 cat=4 recon=1
+  feed 14989555 15@292000 exec=291900 type=C printable=1 late=0 age_ns=57520401
+  feed 14989559 15@292000 exec=291900 type=C printable=1 late=0 age_ns=57519422
+  feed 14989543 100@292000 exec=292000 type=E printable=1 late=0 age_ns=57524872
+  feed 14989571 100@292000 exec=292000 type=E printable=1 late=0 age_ns=57465463
+  pred 14989543 100@292000 late=0 age_ns=57524872
+  pred 14989555 15@292000 late=0 age_ns=57520401
+  pred 14989559 15@292000 late=0 age_ns=57519422
+  pred 14989571 100@292000 late=0 age_ns=57465463
+audit nondisplay_price NI loc=5531 ts=34257146386187 aggressor=S displayed_qty=100 limit=291900 cat=0 recon=1
+  feed 14991759 100@291900 exec=292000 type=C printable=1 late=0 age_ns=1400206
+  pred 14991739 100@291900 late=0 age_ns=1482068
+audit nondisplay_price HYG loc=3888 ts=34260013364701 aggressor=S displayed_qty=100 limit=875500 cat=0 recon=1
+  feed 11056774 100@875500 exec=875600 type=C printable=1 late=0 age_ns=318715
+  pred 10927666 100@875500 late=0 age_ns=4397528247
+audit nondisplay_price HYG loc=3888 ts=34260017663769 aggressor=S displayed_qty=100 limit=875600 cat=0 recon=1
+  feed 11059974 100@875600 exec=875700 type=C printable=1 late=0 age_ns=397334
+  pred 11059482 100@875600 late=0 age_ns=1850629
+audit nondisplay_price HYG loc=3888 ts=34260017664842 aggressor=S displayed_qty=200 limit=875600 cat=0 recon=1
+  feed 11059974 200@875600 exec=875700 type=C printable=1 late=0 age_ns=398407
+  pred 11059482 200@875600 late=0 age_ns=1851702
+audit nondisplay_price XLV loc=8764 ts=34260129203838 aggressor=S displayed_qty=13 limit=1011600 cat=0 recon=1
+  feed 19280580 13@1011600 exec=1011700 type=C printable=1 late=0 age_ns=296689
+  pred 19224712 13@1011600 late=0 age_ns=1465729616
+audit nondisplay_price AGNC loc=187 ts=34260145273991 aggressor=B displayed_qty=100 limit=186500 cat=0 recon=1
+  feed 12738061 100@186500 exec=186400 type=C printable=1 late=0 age_ns=58093
+  pred 11860901 100@186500 late=0 age_ns=29867475521
+audit nondisplay_price GPK loc=3472 ts=34262185892466 aggressor=B displayed_qty=200 limit=159600 cat=4 recon=1
+  feed 11161862 100@159600 exec=159500 type=C printable=1 late=0 age_ns=206914
+  feed 11161586 100@159600 exec=159600 type=E printable=1 late=0 age_ns=5527427
+  pred 11161586 100@159600 late=0 age_ns=5527427
+  pred 11161862 100@159600 late=0 age_ns=206914
+audit nondisplay_price BBL loc=743 ts=34262623086576 aggressor=S displayed_qty=200 limit=443700 cat=0 recon=1
+  feed 12837637 100@443700 exec=443800 type=C printable=1 late=0 age_ns=503235
+  feed 12837661 100@443700 exec=443800 type=C printable=1 late=0 age_ns=50762
+  pred 12165805 200@443700 late=0 age_ns=21642773889
+audit nondisplay_price ET loc=2576 ts=34267056836560 aggressor=S displayed_qty=100 limit=127200 cat=0 recon=1
+  feed 11354458 100@127200 exec=127300 type=C printable=1 late=0 age_ns=82538309
+  pred 11354366 100@127200 late=0 age_ns=83315883
+audit nondisplay_price PLUG loc=6254 ts=34267237479742 aggressor=B displayed_qty=100 limit=40000 cat=0 recon=1
+  feed 15361711 100@40000 exec=39900 type=C printable=1 late=0 age_ns=1371482811
+  pred 7248531 100@40000 late=0 age_ns=66784421915
+audit nondisplay_price TWTR loc=8055 ts=34269413035534 aggressor=B displayed_qty=1100 limit=326000 cat=4 recon=1
+  feed 19735192 200@326000 exec=325900 type=C printable=1 late=0 age_ns=290908
+  feed 19735180 900@326000 exec=326000 type=E printable=1 late=0 age_ns=359112
+  pred 19735180 1100@326000 late=0 age_ns=359112
+audit nondisplay_price TWTR loc=8055 ts=34270020325093 aggressor=B displayed_qty=100 limit=324700 cat=0 recon=1
+  feed 19757040 100@324700 exec=324600 type=C printable=1 late=0 age_ns=221856
+  pred 19756296 100@324700 late=0 age_ns=9077292
+audit nondisplay_price GE loc=3281 ts=34270132440033 aggressor=S displayed_qty=400 limit=129400 cat=0 recon=1
+  feed 11486330 400@129400 exec=129500 type=C printable=1 late=0 age_ns=2997809
+  pred 11464070 400@129400 late=0 age_ns=670597836
+audit nondisplay_price GE loc=3281 ts=34270135626370 aggressor=S displayed_qty=200 limit=129400 cat=0 recon=1
+  feed 11486330 200@129400 exec=129500 type=C printable=1 late=0 age_ns=6184146
+  pred 11464070 200@129400 late=0 age_ns=673784173
+audit nondisplay_price GE loc=3281 ts=34270135664352 aggressor=S displayed_qty=400 limit=129400 cat=0 recon=1
+  feed 11486330 400@129400 exec=129500 type=C printable=1 late=0 age_ns=6222128
+  pred 11464070 400@129400 late=0 age_ns=673822155
+audit nondisplay_price GE loc=3281 ts=34270135713799 aggressor=S displayed_qty=400 limit=129400 cat=0 recon=1
+  feed 11486330 400@129400 exec=129500 type=C printable=1 late=0 age_ns=6271575
+  pred 11464070 400@129400 late=0 age_ns=673871602
+audit nondisplay_price GE loc=3281 ts=34270135757569 aggressor=S displayed_qty=400 limit=129400 cat=0 recon=1
+  feed 11486330 400@129400 exec=129500 type=C printable=1 late=0 age_ns=6315345
+  pred 11464070 400@129400 late=0 age_ns=673915372
+audit nondisplay_price GE loc=3281 ts=34270135800416 aggressor=S displayed_qty=400 limit=129400 cat=0 recon=1
+  feed 11486330 400@129400 exec=129500 type=C printable=1 late=0 age_ns=6358192
+  pred 11464070 400@129400 late=0 age_ns=673958219
+audit nondisplay_price GE loc=3281 ts=34270135844145 aggressor=S displayed_qty=400 limit=129400 cat=0 recon=1
+  feed 11486330 400@129400 exec=129500 type=C printable=1 late=0 age_ns=6401921
+  pred 11464070 400@129400 late=0 age_ns=674001948
+audit nondisplay_price GE loc=3281 ts=34270140488625 aggressor=S displayed_qty=100 limit=129400 cat=0 recon=1
+  feed 11486330 100@129400 exec=129500 type=C printable=1 late=0 age_ns=11046401
+  pred 11464070 100@129400 late=0 age_ns=678646428
+audit nondisplay_price GE loc=3281 ts=34270284118921 aggressor=B displayed_qty=100 limit=129700 cat=0 recon=1
+  feed 11493486 100@129700 exec=129600 type=C printable=1 late=0 age_ns=195761
+  pred 6267550 2@129700 late=0 age_ns=1130329986816
+  pred 8677846 98@129700 late=0 age_ns=69304829200

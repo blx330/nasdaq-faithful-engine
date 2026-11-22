@@ -70,6 +70,23 @@ class Fidelity {
   uint64_t unexplained_logged = 0;
   uint64_t first_unexplained_msg = 0;
   uint64_t late_events = 0;         // events whose feed fills include an order placed by priority_by_ref
+  // Audit of the two classes that absorb a mismatch because the event also holds hidden
+  // executions (index 0 non_displayed, 1 nondisplay_price): re-predict with the displayed
+  // shares only. Hidden fills never change which displayed orders an aggressor of that
+  // size reaches first, so a mismatch here is a displayed-queue error hiding in the class.
+  uint64_t audit_ok[2]{}, audit_bad[2]{}, audit_skipped[2]{};
+  // Categories of audit-bad events: 0 explained by execution-price priority (every skipped order is
+  // at a strictly worse displayed price than all fills, so it was not reached), 1 tie (a skipped order
+  // is at the same price as the worst fill), 2 contradiction (a skipped order is at a strictly better
+  // price than a fill), 3 execution prices not monotone, 4 no skipped order (quantity split only).
+  uint64_t audit_cat[2][5]{};
+  // Strict constructive test on audit-bad events: orders that executed at a price different from their
+  // displayed price (printable C) are taken out of the displayed queue and filled first at their working
+  // price; the rest of the aggressor's size must then reproduce, exactly and in order, every remaining
+  // displayed fill. recon_ok counts events fully reproduced that way; recon_bad are the residual.
+  uint64_t audit_recon_ok[2]{}, audit_recon_bad[2]{};
+  FILE* audit_txt = nullptr;
+  uint64_t audit_logged = 0;
 
   // ---- ITCH handlers ----
   void on(const itch::OrderExecuted& m) {
@@ -216,6 +233,7 @@ class Fidelity {
       else if (merged_matches(aggr, limit)) cls = Cls::Grouping;
       else cls = Cls::Unexplained;
     }
+    if (cls == Cls::NonDisplayed || cls == Cls::NonDisplayPrice) audit_displayed(cls, aggr, unknown);
     ++ss.cls[int(cls)];
     ++total[int(cls)];
     if (late) ++late_events;
@@ -225,6 +243,131 @@ class Fidelity {
                    int(same_ts), int(late), cls_name(cls));
     if (cls == Cls::Unexplained && !first_unexplained_msg) first_unexplained_msg = r.c.n_msgs + 1;
     if (cls == Cls::Unexplained && unexplained_txt && unexplained_logged < 10000) log_unexplained(aggr, limit, total_qty);
+  }
+
+  bool audit_reconstruct(char aggr) {
+    std::vector<Fill> rest;           // fills at their displayed price, in feed order
+    std::vector<uint64_t> improved;   // orders that executed away from their displayed price
+    uint64_t rest_qty = 0;
+    uint32_t imp_best_ok = 1;         // improved executions must not be worse than any displayed fill
+    uint32_t lo = UINT32_MAX, hi = 0;
+    size_t fi = 0;
+    for (auto& x : buf_) {
+      if (x.type == 'P') continue;
+      const Fill& f = feed_[fi++];
+      const uint32_t e = x.type == 'E' ? f.price : x.price;
+      if (e != f.price) improved.push_back(f.resting_id);
+      else { rest.push_back(f); rest_qty += f.qty; lo = std::min(lo, f.price); hi = std::max(hi, f.price); }
+    }
+    // Execution prices over the whole sequence must be monotone from the aggressor's view.
+    {
+      bool mono = true;
+      uint32_t prev = 0;
+      size_t k = 0;
+      for (auto& x : buf_) {
+        if (x.type == 'P') continue;
+        const uint32_t e = x.type == 'E' ? feed_[k].price : x.price;
+        if (k && (aggr == 'B' ? e < prev : e > prev)) mono = false;
+        prev = e;
+        ++k;
+      }
+      imp_best_ok = mono ? 1 : 0;
+    }
+    if (!imp_best_ok) return false;
+    if (rest.empty()) return true;
+    const uint32_t lim = aggr == 'B' ? hi : lo;
+    std::vector<Fill> p3;
+    uint32_t left = uint32_t(rest_qty);
+    r.book.walk(loc_, opposite(aggr), [&](const auto& lv) {
+      if (left == 0 || !crosses(aggr, lim, lv.price)) return false;
+      for (const auto* o = lv.head; o && left > 0; o = o->next) {
+        bool skip = false;
+        for (uint64_t id : improved) if (id == o->id) { skip = true; break; }
+        if (skip) continue;
+        const uint32_t q = o->qty < left ? o->qty : left;
+        p3.push_back(Fill{o->id, lv.price, q});
+        left -= q;
+      }
+      return left > 0;
+    });
+    std::vector<Fill> merged;
+    for (auto& f : rest) {
+      if (!merged.empty() && merged.back().resting_id == f.resting_id && merged.back().price == f.price) merged.back().qty += f.qty;
+      else merged.push_back(f);
+    }
+    return p3 == rest || p3 == merged;
+  }
+
+  void audit_displayed(Cls cls, char aggr, bool unknown) {
+    const int k = cls == Cls::NonDisplayed ? 0 : 1;
+    if (unknown || feed_.empty() || !aggr) { ++audit_skipped[k]; return; }
+    uint64_t dq = 0;
+    uint32_t dl = aggr == 'B' ? 0 : UINT32_MAX;
+    for (auto& f : feed_) {
+      dq += f.qty;
+      dl = aggr == 'B' ? std::max(dl, f.price) : std::min(dl, f.price);
+    }
+    audit_pred_.clear();
+    predict(r.book, loc_, aggr, dl, uint32_t(dq), audit_pred_);
+    std::vector<Fill> merged;
+    for (auto& f : feed_) {
+      if (!merged.empty() && merged.back().resting_id == f.resting_id && merged.back().price == f.price) merged.back().qty += f.qty;
+      else merged.push_back(f);
+    }
+    if (audit_pred_ == feed_ || audit_pred_ == merged) { ++audit_ok[k]; return; }
+    ++audit_bad[k];
+    const bool recon = audit_reconstruct(aggr);
+    if (recon) ++audit_recon_ok[k]; else ++audit_recon_bad[k];
+    audit_last_recon_ = recon;
+    {
+      // execution prices of the feed fills, in feed order
+      bool mono = true;
+      uint32_t first_e = 0, prev_e = 0, worst_e = 0;
+      size_t fi = 0;
+      for (auto& x : buf_) {
+        if (x.type == 'P') continue;
+        const uint32_t e = x.type == 'E' ? feed_[fi].price : x.price;
+        ++fi;
+        if (fi == 1) { first_e = e; worst_e = e; }
+        else {
+          if (aggr == 'B' ? e < prev_e : e > prev_e) mono = false;
+          worst_e = aggr == 'B' ? std::max(worst_e, e) : std::min(worst_e, e);
+        }
+        prev_e = e;
+      }
+      (void)first_e;
+      bool any_skipped = false, viol = false, tie = false;
+      for (auto& pf : audit_pred_) {
+        bool in_feed = false;
+        for (auto& f : feed_) if (f.resting_id == pf.resting_id) { in_feed = true; break; }
+        if (in_feed) continue;
+        any_skipped = true;
+        if (aggr == 'B' ? pf.price < worst_e : pf.price > worst_e) viol = true;
+        else if (pf.price == worst_e) tie = true;
+      }
+      const int c = !mono ? 3 : !any_skipped ? 4 : viol ? 2 : tie ? 1 : 0;
+      ++audit_cat[k][c];
+      audit_last_cat_ = c;
+    }
+    if (audit_txt && audit_logged < 10000) {
+      ++audit_logged;
+      std::fprintf(audit_txt, "audit %s %s loc=%u ts=%llu aggressor=%c displayed_qty=%llu limit=%u cat=%d recon=%d\n", cls_name(cls),
+                   r.names[loc_].c_str(), loc_, (unsigned long long)ts_, aggr, (unsigned long long)dq, dl, audit_last_cat_, int(audit_last_recon_));
+      size_t fi = 0;
+      for (auto& x : buf_) {
+        if (x.type == 'P') continue;
+        const Fill& f = feed_[fi++];
+        const Order* o = r.book.find(f.resting_id);
+        std::fprintf(audit_txt, "  feed %llu %u@%u exec=%u type=%c printable=%d late=%d age_ns=%lld\n", (unsigned long long)f.resting_id,
+                     f.qty, f.price, x.type == 'E' ? f.price : x.price, x.type, int(x.printable), o && o->late,
+                     o ? (long long)(ts_ - o->ts) : -1LL);
+      }
+      for (auto& f : audit_pred_) {
+        const Order* o = r.book.find(f.resting_id);
+        std::fprintf(audit_txt, "  pred %llu %u@%u late=%d age_ns=%lld\n", (unsigned long long)f.resting_id, f.qty, f.price,
+                     o && o->late, o ? (long long)(ts_ - o->ts) : -1LL);
+      }
+    }
   }
 
   // Two same-side aggressors at one timestamp walk the book in the same
@@ -257,7 +400,9 @@ class Fidelity {
   std::vector<ExecMsg> buf_;
   itch::AddOrder remainder_{};
   bool has_remainder_ = false;
-  std::vector<Fill> feed_, pred_;
+  std::vector<Fill> feed_, pred_, audit_pred_;
+  int audit_last_cat_ = 0;
+  bool audit_last_recon_ = false;
   uint16_t prev_loc_ = 0;
   uint64_t prev_ts_ = 0;
 };
