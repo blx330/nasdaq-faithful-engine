@@ -1,7 +1,6 @@
 # Engineering log
 
-Dated entries: what broke, the hypothesis, how it was diagnosed. Keep adding
-to this by hand; it is the authorship evidence.
+Dated entries: what broke, the hypothesis, how it was diagnosed.
 
 ## 2026-11-17: first build
 
