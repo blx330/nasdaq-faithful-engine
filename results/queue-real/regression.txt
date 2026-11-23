@@ -1,0 +1,12 @@
+== all joiners: n=2459807, symbol-days=97, mean fill_10s=0.0402
+   log_ahead alone (symbol-day FE): -0.01579 (se 0.00268)
+   log_ahead     -0.00892 (se 0.00215, t -4.1)
+   imb_toward    -0.01427 (se 0.00326, t -4.4)
+   spread_ticks  -0.01319 (se 0.00168, t -7.8)
+   log_qty       -0.01875 (se 0.00436, t -4.3)
+== excluding better-price orders: n=2456525, symbol-days=97, mean fill_10s=0.0390
+   log_ahead alone (symbol-day FE): -0.01639 (se 0.00272)
+   log_ahead     -0.00961 (se 0.00220, t -4.4)
+   imb_toward    -0.01319 (se 0.00316, t -4.2)
+   spread_ticks  -0.01481 (se 0.00180, t -8.2)
+   log_qty       -0.01879 (se 0.00439, t -4.3)

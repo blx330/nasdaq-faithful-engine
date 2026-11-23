@@ -94,9 +94,8 @@ def markouts(f, o, mids):
 def cluster_sums(df, value_cols, weight):
     """Per cluster and decile: weighted sums and weights, for fast bootstraps."""
     g = df.assign(_w=df[weight] if weight else 1.0)
-    agg = {c: (c, lambda s, w=None: 0) for c in []}
     rows = []
-    for (cl, dec), x in g.groupby(["cluster", "decile"]):
+    for (cl, dec), x in g.groupby(["cluster", "decile"], observed=True):
         r = {"cluster": cl, "decile": dec, "w": x._w.sum()}
         for c in value_cols:
             r[c] = (x[c] * x._w).sum()
