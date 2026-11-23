@@ -1,85 +1,116 @@
 # Nasdaq-Faithful Matching Engine
 
-A C++20 price-time matching engine that, run in matching mode, reproduces
-Nasdaq's own displayed-book executions from a TotalView-ITCH 5.0 day and
-assigns every execution it cannot reproduce to a named exchange mechanism.
-It is then used to measure what queue position is worth.
+A C++20 ITCH 5.0 order book and price-time matcher, checked against Nasdaq's own executions.
+ITCH shows resting orders and the executions against them, never the incoming order. This project
+infers each incoming order, asks the matcher what it would have filled on the book just before, and
+compares the answer with what Nasdaq actually did. Every difference is traced to a named exchange
+mechanism, and each mechanism is tested with a negative control. The book is then used to measure
+what queue position is worth.
 
-> **Status:** every pipeline runs end to end. The numbers below come from
-> **synthetic** ITCH days (`sim/itch_sim.py`), because the build environment
-> could not download Nasdaq's files. Run `make reproduce ITCH=...` on a real
-> day to replace them.
+All numbers below are from Nasdaq's public TotalView-ITCH sample files
+(https://emi.nasdaq.com/ITCH/Nasdaq%20ITCH/), not synthetic data.
 
-| Fidelity | Seeded bugs caught | Throughput |
-| --- | --- | --- |
-| **96.7%** exact match, **0** unexplained | **28 / 28** | **1.44x** CppTrader's market manager |
+## Results
 
-![Residual taxonomy](results/residual_taxonomy.png)
-![Fill probability by queue decile](results/queue/fill_prob_all.png)
-![Time attribution](results/time_attribution.png)
+**Full day, 2020-01-30: 423,285,709 messages, 8,915 symbols, one process, 240 s, 2.5 GB.**
+
+| Check | Result |
+| --- | --- |
+| Book reconstruction | 0 unknown references, 0 overfills, 0 crossed books in continuous trading |
+| Exact fill sequence predicted, plain price-time FIFO | 95.3% of 5,635,687 displayed-book events |
+| After two rules found from the residuals (below) | 0 events unexplained, 0 audit residual |
+| Same rules, unchanged, on 3 more days (25-symbol panel) | 0 unexplained, 0 audit residual on each |
+
+What it took to get from 95.3% to zero residual, in events (`docs/scale-up-results.md`, "Ablation"):
+
+| Model of the displayed queue | Not reproduced |
+| --- | --- |
+| Price-time FIFO in feed order, displayed fills scored on their own | 95,738 (1.70%) |
+| plus: orders that execute at a better price than displayed fill first | 3,096 |
+| plus: queue priority by entry order (reference number), not display order | 0 |
+
+Two things a displayed-FIFO fill model gets wrong on Nasdaq, both measured here:
+
+1. **Entry order beats display order at the open.** Orders accepted before the open are released to the
+   book over roughly the first 40 seconds after the opening cross, and they queue by when they were
+   entered: 316,692 of them land ahead of orders that were displayed earlier. Switch that rule off and
+   2,844 events go unexplained.
+2. **Displayed price is not always the working price.** In 92,645 events (1.3% of continuous events),
+   orders displayed at one price execute at a better one and fill ahead of the displayed queue. This
+   matches Nasdaq's Price to Comply order type (Rule 4702(b)(1): displayed one increment away, ranked at
+   a non-displayed price). The first version of this project reported "0 unexplained" without checking
+   those events; an audit added later found them. That story is in `docs/engineering-log.md`.
+
+**Queue position** (25 symbols, 4 days, 14.4M orders at the touch, `docs/queue-results.md`):
+
+![Fill probability by queue position](results/queue-real/fill_prob_all.png)
+
+- Front-decile orders fill within 10 s 3.9 times as often as back-decile orders (95% interval 3.1 to 5.1).
+  The effect survives controls for imbalance, spread, size and time of day, at a little over half its raw size.
+- No back-of-queue markout penalty: -0.70 bps (interval -1.60 to +0.09). The sign flips between
+  tick-constrained and wider-spread symbols.
+- 2.5% of fills happen at a better price than displayed, outside the displayed queue.
+- Predictions were committed before each run. Of 9 for the queue study, 2 were wrong and 1 was not supported;
+  of the scale-up predictions, 6 were wrong. All are scored in the docs.
+
+**Tests.** An OCaml executable spec written first, differential fuzzing of the C++ engine against it, C++
+property tests, libFuzzer under ASan and UBSan, and 28 seeded bugs, all caught
+([`results/mutant_matrix.md`](results/mutant_matrix.md)). The audit has its own negative-control unit test.
+
+**Performance.** Not a headline. The baseline book (`std::map` levels, `std::unordered_map` orders) replays
+a real 12M-message extract at about 6.8M messages/s in a Linux VM on an M-series laptop. The "fast" paged
+order lookup is faster on dense synthetic data and about 6 times slower on real data, where reference
+numbers are sparse. That negative result and its diagnosis are in [`docs/perf-log.md`](docs/perf-log.md).
+
+## What this is not
+
+- Not a production matching engine: one order type (limit), no order entry gateway, no networking, no
+  hidden or pegged orders. It is a book builder and a fill-model validator.
+- "0 unexplained" does not mean every execution is predicted. The better-price rule reads the working
+  price from the event's own messages, so it explains those executions after the fact.
+- One full day and three 25-symbol panel days, from 2019 and early 2020.
+- The opening-release description is inferred from the feed; no rule text was found for its sequencing.
+
+## Run it
 
 ```sh
-make reproduce                                   # synthetic days, ~3 minutes
-make reproduce ITCH=data/01302020.NASDAQ_ITCH50 SYMBOLS=AAPL,MSFT,...   # a real day
+make test                                              # unit, property, equivalence, QCheck, 1M-op differential
+make reproduce                                         # synthetic days, about 3 minutes, no data needed
+make verify-real ITCH=data/01302020.NASDAQ_ITCH50      # the full real day against results/expected/, about 4 minutes
+scripts/panel_day.sh data/12302019.NASDAQ_ITCH50       # 25-symbol panel pipeline for one day
+python3 analysis/queue_panel.py out/panel/*/queue --out results/queue-real
 ```
 
-Full numbers: [`results/REPORT.md`](results/REPORT.md). Claims, evidence and
-limits: [`docs/writeup.md`](docs/writeup.md). How it was built and what went
-wrong: [`docs/engineering-log.md`](docs/engineering-log.md).
-
-## The four pillars
-
-**Fidelity.** ITCH shows resting orders and executions against them, never
-the incoming order. `nfe_fidelity` groups executions into matching events,
-infers the aggressor (side, size, limit), rewinds to the pre-event book, and
-asks the matcher what that order would have filled. Differences are
-classified: hidden liquidity (P), non-display price (printable C), crosses,
-grouping ambiguity, unexplained. On synthetic days, where every aggressor is
-known, the grouping heuristic is scored against the truth.
-
-**Test power.** An OCaml executable spec, written first, with QCheck
-properties of its own; differential fuzzing of the C++ engine against it;
-C++ property tests; libFuzzer on the parser and engine under ASan/UBSan; and
-a matrix of 28 hand-seeded bugs against three validators
-([`results/mutant_matrix.md`](results/mutant_matrix.md)).
-
-**The finding.** Fill probability within 1/10/60 s and markouts at
-100 ms/1 s/10 s by decile of shares ahead at arrival, with intervals
-bootstrapped by symbol-day, split by tick-constrained vs wider-spread
-symbols. Hypotheses are in the write-up and were fixed before running.
-
-**Performance.** A baseline (`std::map` + `std::unordered_map`) and a final
-design changed one step at a time with a written prediction each
-([`docs/perf-log.md`](docs/perf-log.md)), measured against CppTrader on the
-same file and machine.
+Download a day from the Nasdaq link above and `gunzip` it into `data/` (about 13 GB). The ITCH files are
+not in this repository.
 
 ## Layout
 
 ```
 include/nfe/   itch.hpp (decoder) book.hpp fast_book.hpp matcher.hpp replay.hpp fidelity.hpp
-src/tools/     nfe_replay nfe_fidelity nfe_queue nfe_bench nfe_engine nfe_extract nfe_stats
+src/tools/     nfe_replay nfe_fidelity nfe_queue nfe_lateadds nfe_trace nfe_bench nfe_engine nfe_extract nfe_stats
 spec/          OCaml executable spec, protocol driver, QCheck properties
 tests/         unit, property and book-equivalence tests; regressions/ from the fuzzer
 fuzz/          difftest.py (differential), libFuzzer targets
 mutants/       seeded bugs as patches, matrix runner
 sim/           synthetic ITCH exchange with ground truth; fault injector
-analysis/      grouping score, close check, queue study, report
-scripts/       reproduce.sh, bench.sh, cpptrader_baseline.sh
+analysis/      queue study (queue_panel.py real data, queue_study.py synthetic), scale-up, grouping score, report
+scripts/       panel_day.sh, verify_real.py, reproduce.sh, bench.sh, cpptrader_baseline.sh
+docs/          writeup, scale-up results, queue results, predictions, engineering log, perf log
+results/       numbers and figures; expected/ holds the full-day totals that verify-real checks
 ```
 
 ## Requirements
 
-Linux, CMake 3.20+, GCC 13 or Clang 18, OCaml 4.14 with dune and
-qcheck-core, Python 3 with pandas, numpy and matplotlib. Benchmarks want
-`perf` with hardware counter access. On Ubuntu 24.04:
+macOS or Linux, CMake 3.20+, a C++20 compiler (GCC 11 or later, or a recent Clang), OCaml 4.14 with dune and
+qcheck-core, Python 3 with pandas, numpy, matplotlib and statsmodels. Sanitizers, libFuzzer and `perf`
+counters need Linux; CI runs those.
 
 ```sh
-sudo apt-get install cmake g++ clang libclang-rt-18-dev ocaml ocaml-dune libqcheck-core-ocaml-dev ocaml-findlib
-pip install pandas numpy matplotlib
-make test
+brew install cmake opam && opam init -y && eval $(opam env) && opam install -y dune qcheck-core   # macOS
+pip3 install pandas numpy matplotlib statsmodels
 ```
 
-## Non-goals
-
-Networking, multi-threaded matching, persistence, a GUI, trading strategies,
-batch auctions.
+Further reading: [`docs/writeup.md`](docs/writeup.md) (claims, evidence, limits),
+[`docs/scale-up-results.md`](docs/scale-up-results.md), [`docs/queue-results.md`](docs/queue-results.md),
+[`docs/engineering-log.md`](docs/engineering-log.md).

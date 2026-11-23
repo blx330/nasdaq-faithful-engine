@@ -217,3 +217,38 @@ Prediction for 2020-01-30, written before running:
 - Same shape: batches = symbols per second while many symbols are active, then a roughly flat total batch rate as symbols drop out. Confidence: 80%
 - It ends 8 s later (39.7 s vs 31.7 s) on a similar Nasdaq-listed count (275,560 vs 270,080), so either it has more batches or a lower rate. My guess: lower rate (fewer batches/s), not more batches. Confidence: 65%
 - What would count against one queue: total batches/s falling in step with the number of active symbols.
+
+### 2026-11-23: release investigation closed; ablation, queue study, write-up
+
+**Release queue: stopped here.** The 2020-01-30 check matched the committed prediction on shape (one market-wide
+queue, roughly flat batch rate) and missed on "lower rate, not more batches" (both moved about 11%). Whether 40 s
+is a cap or just where the queue ran out is unresolved: 2020 was still releasing about 330 batches/s in second 39
+and AAPL ran 4 to 17 ms past 40.000. I am leaving it unresolved. It adds depth to the part of the project that is
+already the strongest, and the queue study had no real-data result at all. Wording fixed in the docs: "all but 83
+of 316,692", not "all". The AMZN 39.67 s figure is retracted (wrong column).
+
+**Ablation.** Added `--shard K/N` to `nfe_fidelity` (filter by stock locate; shard event counts add up to the
+single-process total) so the full day can be run with feed-order priority on a small machine. Full day, feed order:
+2,844 unexplained and an audit residual of 252. Entry order: 0 and 0. Same direction on all four panel days. The
+honest ladder is 95,738 events not reproduced by displayed FIFO, 3,096 after the better-price rule, 0 after
+entry-order priority. Plain FIFO gets the exact fill sequence for 95.3% of displayed-book events, which is the
+number to lead with: the zero depends on a rule that reads the working price from the event itself.
+
+**Panel like-for-like.** 2020-01-30 on the same 25 symbols: 42% of audited events fail displayed FIFO, against 38%
+for the full market that day and 51% to 61% on the 2019 panel days. So the panel mix explains part of the gap, not
+all of it.
+
+**Queue study.** Predictions committed first (9ff26a5). Results in `docs/queue-results.md`. Right on the fill
+effect (3.9x front over back at 10 s, at the edge of my 1.5x to 4x range) and on it surviving controls. Wrong on
+markouts: I expected back-of-queue fills to be more adverse and the point estimate is the other way (-0.70 bps),
+with the sign depending on whether the symbol is tick-constrained. Wrong on tier 4 being too thin. What I take
+from the markout miss: "shares ahead at arrival" is not one thing. Joining a level with little ahead of you in a
+one-tick market often means joining a level that is about to be taken out.
+
+**Things that broke.** The first real-data fill chart was unreadable (y axis fixed at 0 to 1 for rates under 10%);
+replaced with a two-panel figure. `queue_study.py` could not hold a real day in memory as strings; `queue_panel.py`
+reduces each day to symbol-day sums first. The fast book is about 6x slower than the baseline on a real extract;
+diagnosis in `docs/perf-log.md`, and the README no longer quotes the CppTrader ratio.
+
+**Tests added.** `test_audit_negative_control` (audit residual 0 with entry order, 1 with feed order on a
+hand-built event) and `make verify-real` (full-day totals against `results/expected/01302020.json`).
