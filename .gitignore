@@ -11,3 +11,7 @@ results/golden/
 crash-*
 leak-*
 timeout-*
+.DS_Store
+results/fullday-single/fidelity/events.csv
+results/fullday-single/fidelity/audit.txt
+results/fullday-single/late/late.csv

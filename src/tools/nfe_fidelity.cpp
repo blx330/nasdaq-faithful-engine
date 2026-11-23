@@ -1,10 +1,13 @@
 // Phase 2: matching-mode fidelity against the feed.
 //
-//   nfe_fidelity <itch-file> [--out DIR] [--priority feed|ref]
+//   nfe_fidelity <itch-file> [--out DIR] [--priority feed|ref] [--shard K/N]
 //
 // --priority ref (default) orders each price level by reference number, which
 // models orders entered before the open but released after the opening cross;
 // --priority feed is plain arrival order on the feed (see BaselineBook).
+// --shard K/N keeps only symbols whose stock locate is K modulo N (plus market-wide
+// messages), so a full day can be run in N independent pieces on a small machine;
+// per-symbol books are independent, so class counts add up across the pieces.
 // Writes DIR/fidelity.json (totals by class), DIR/per_symbol.csv,
 // DIR/events.csv (one row per inferred aggressor) and DIR/unexplained.txt.
 #include <chrono>
@@ -19,12 +22,27 @@
 
 using namespace nfe;
 
+// Passes on market-wide messages (locate 0) and one residue class of stock locates.
+template <class H>
+struct ShardFilter {
+  H* h;
+  unsigned n, k;
+  template <class M> void on(const M& m) { if (m.h.locate == 0 || m.h.locate % n == k) h->on(m); }
+};
+
 int main(int argc, char** argv) {
-  if (argc < 2) { std::fprintf(stderr, "usage: nfe_fidelity <itch-file> [--out DIR] [--priority feed|ref]\n"); return 2; }
+  if (argc < 2) { std::fprintf(stderr, "usage: nfe_fidelity <itch-file> [--out DIR] [--priority feed|ref] [--shard K/N]\n"); return 2; }
   std::string out = "out", priority = "ref";
+  unsigned shard_k = 0, shard_n = 1;
   for (int i = 2; i < argc; ++i) {
     if (!std::strcmp(argv[i], "--out") && i + 1 < argc) out = argv[++i];
     else if (!std::strcmp(argv[i], "--priority") && i + 1 < argc) priority = argv[++i];
+    else if (!std::strcmp(argv[i], "--shard") && i + 1 < argc) {
+      if (std::sscanf(argv[++i], "%u/%u", &shard_k, &shard_n) != 2 || shard_n == 0 || shard_k >= shard_n) {
+        std::fprintf(stderr, "--shard must be K/N with K < N\n");
+        return 2;
+      }
+    }
   }
   if (priority != "ref" && priority != "feed") { std::fprintf(stderr, "--priority must be feed or ref\n"); return 2; }
   std::filesystem::create_directories(out);
@@ -37,7 +55,8 @@ int main(int argc, char** argv) {
   fid->audit_txt = std::fopen((out + "/audit.txt").c_str(), "w");
   std::fprintf(fid->events_csv, "locate,ts_ns,side,qty,limit,n_msgs,has_p,has_c_printable,same_ts,late,class\n");
   const auto t0 = std::chrono::steady_clock::now();
-  auto st = itch::parse_stream(f.data(), f.size(), *fid);
+  ShardFilter<Fidelity<>> filter{fid.get(), shard_n, shard_k};
+  auto st = itch::parse_stream(f.data(), f.size(), filter);
   fid->finish();
   const double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   std::fclose(fid->events_csv);

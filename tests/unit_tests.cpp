@@ -1,9 +1,11 @@
 // Unit tests: ITCH decoding, book operations, priority rules, matching.
 #include <cstdio>
 #include <cstring>
+#include <memory>
 #include <vector>
 
 #include "nfe/book.hpp"
+#include "nfe/fidelity.hpp"
 #include "nfe/itch.hpp"
 #include "nfe/matcher.hpp"
 
@@ -153,10 +155,54 @@ static void test_book_and_priority() {
   CHECK(!b.find(2) && !b.find(4));
 }
 
+// The displayed-queue audit and its negative control. Order 30 is displayed at 101.00 but
+// executes at 100.99 through a printable C message (a better working price), so it fills
+// ahead of the displayed queue; the rest of the aggressor's size then takes order 20, which
+// was displayed after order 50 but entered before it. With entry-order priority the audit
+// reproduces the event (residual 0). With plain feed-order priority it must not: the
+// displayed queue then predicts order 50, and the audit has to report a residual.
+static void test_audit_negative_control() {
+  for (bool by_ref : {true, false}) {
+    auto fid = std::make_unique<Fidelity<>>();
+    fid->r.book.priority_by_ref = by_ref;
+    const uint64_t open = 34'200ULL * kNsPerSec;
+    itch::SystemEvent q{};
+    q.h = {'S', 0, 0, open}; q.event = 'Q';
+    fid->on(q);
+    itch::StockTradingAction ta{};
+    ta.h = {'H', 1, 0, open}; ta.state = 'T';
+    fid->on(ta);
+    const uint64_t t = open + 10 * kNsPerSec;  // past the opening grace period: continuous trading
+    auto add = [&](uint64_t ref, char side, uint32_t px, uint64_t ts) {
+      itch::AddOrder a{};
+      a.h = {'A', 1, 0, ts}; a.ref = ref; a.side = side; a.shares = 100; a.price = px;
+      fid->on(a);
+    };
+    add(10, 'B', 1009000, t);
+    add(50, 'S', 1010000, t + 1);
+    add(20, 'S', 1010000, t + 2);
+    add(30, 'S', 1010000, t + 3);
+    itch::OrderExecutedWithPrice c{};
+    c.h = {'C', 1, 0, t + 10}; c.ref = 30; c.shares = 100; c.printable = 'Y'; c.price = 1009900;
+    fid->on(c);
+    itch::OrderExecuted e{};
+    e.h = {'E', 1, 0, t + 10}; e.ref = 20; e.shares = 10;
+    fid->on(e);
+    fid->finish();
+    CHECK(fid->total[int(Cls::NonDisplayPrice)] == 1);
+    CHECK(fid->total[int(Cls::Unexplained)] == 0);
+    CHECK(fid->audit_bad[1] == 1);  // the displayed-only prediction misses it either way
+    CHECK(fid->audit_recon_ok[1] == (by_ref ? 1u : 0u));
+    CHECK(fid->audit_recon_bad[1] == (by_ref ? 0u : 1u));
+    CHECK(fid->r.c.unknown_ref == 0 && fid->r.c.overfill == 0);
+  }
+}
+
 int main() {
   test_itch_decode();
   test_book_and_priority();
   test_priority_by_ref();
+  test_audit_negative_control();
   std::printf("%d checks, %d failures\n", checks, failures);
   return failures ? 1 : 0;
 }

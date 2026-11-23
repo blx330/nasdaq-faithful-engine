@@ -2,7 +2,7 @@
 BUILD ?= build
 JOBS  ?= $(shell getconf _NPROCESSORS_ONLN)
 
-.PHONY: help build spec test fuzz fuzz-libfuzzer mutants reproduce extract bench cpptrader clean
+.PHONY: help build spec test verify-real fuzz fuzz-libfuzzer mutants reproduce extract bench cpptrader clean
 
 help:
 	@echo "make build           C++ tools and tests (Release)"
@@ -12,6 +12,7 @@ help:
 	@echo "make mutants         seeded-bug matrix (needs synthetic data: run reproduce once)"
 	@echo "make reproduce       every number and chart in results/ (synthetic by default)"
 	@echo "                     real data: make reproduce ITCH='data/01302020.NASDAQ_ITCH50' SYMBOLS=AAPL,MSFT"
+	@echo "make verify-real ITCH=data/01302020.NASDAQ_ITCH50   rerun the full real day and compare with results/expected/"
 	@echo "make extract IN=... OUT=... SYMBOLS=A,B,C   cut a symbol extract"
 	@echo "make bench FILE=...  throughput and latency, both book designs"
 	@echo "make cpptrader FILE=...  external baseline on the same file"
@@ -49,6 +50,9 @@ mutants: build spec
 
 reproduce:
 	ITCH="$(ITCH)" SYMBOLS="$(SYMBOLS)" scripts/reproduce.sh
+
+verify-real: build
+	python3 scripts/verify_real.py $(ITCH) --build $(BUILD)
 
 extract: build
 	$(BUILD)/nfe_extract $(IN) $(OUT) $(SYMBOLS)
