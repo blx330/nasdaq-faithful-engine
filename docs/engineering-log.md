@@ -208,3 +208,12 @@ are the better-working-price mechanism charged to the wrong orders; the construc
 
 **Next.** The three panel days (12302019, 08302019, 01302019) are downloaded and pass `gzip -t`; running
 `scripts/panel_day.sh` on each.
+
+### 2026-11-23: prediction before the 2020-01-30 release-queue check
+
+Context: on 01302019 (full market) the opening release looks like one market-wide queue. In seconds 1 to 14, batches = symbols every second (one batch per symbol per ~1 s pass); after that, total batches stay at ~400-540/s while active symbols fall from ~370 to 4, so the last big names get served many times a second. This was exploratory (not pre-registered), and my pre-registered gap test only half worked (p10/p50/p90 = 0.39x/1x/3.7x the median: more regular than random at the short end, heavier tail at the long end).
+
+Prediction for 2020-01-30, written before running:
+- Same shape: batches = symbols per second while many symbols are active, then a roughly flat total batch rate as symbols drop out. Confidence: 80%
+- It ends 8 s later (39.7 s vs 31.7 s) on a similar Nasdaq-listed count (275,560 vs 270,080), so either it has more batches or a lower rate. My guess: lower rate (fewer batches/s), not more batches. Confidence: 65%
+- What would count against one queue: total batches/s falling in step with the number of active symbols.
