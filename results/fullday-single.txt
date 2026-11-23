@@ -1,0 +1,16 @@
+events=7003063 continuous=6874975 exact=0.9539 exact_no_hidden=0.9757 unexplained=0  (280.65s)
+  priority=ref late_inserts=316692 late_events=4608
+  match             5188865
+  match_hidden      187259
+  non_displayed     130346
+  nondisplay_price  111827
+  cross             128088
+  grouping          0
+  remainder_repriced 17390
+  hidden_only       1239288
+  unexplained       0
+  audit_reconstruction non_displayed: reproduced=1885 residual=0
+  audit_reconstruction nondisplay_price: reproduced=90760 residual=0
+  audit_bad non_displayed: price_priority=1340 tie=186 contradiction=0 non_monotone=0 qty_only=359
+  audit_bad nondisplay_price: price_priority=89254 tie=264 contradiction=0 non_monotone=0 qty_only=1242
+  audit (displayed-only re-prediction) non_displayed ok=128461 bad=1885 skipped=0; nondisplay_price ok=21067 bad=90760 skipped=0

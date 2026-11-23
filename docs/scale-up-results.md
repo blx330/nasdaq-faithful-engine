@@ -1,7 +1,7 @@
-# Scale-up results: full 2020-01-30 day (2026-11-22)
+# Scale-up results: full 2020-01-30 day (2026-11-22) and four panel days (2026-11-23)
 
 Predictions were committed first (`docs/predictions-scale-up.md`, commit e13fcba). This file scores them.
-Multi-day runs are NOT done: see "Not done".
+The panel days and the priority ablation were added on 2026-11-23: see "Panel days" and "Ablation" below.
 
 ## What was run
 
@@ -79,36 +79,109 @@ Two populations, not "1 s vs 11 s":
   are one burst at the open marker's own timestamp, 0 to 1.3 s after 09:30:00. For these 99% to 100% of late inserts
   have the same timestamp as the marker. They have no real auction: 5,891 of the 8,915 open markers have zero shares
   and zero price.
-- **Nasdaq-listed symbols (Q, G, S):** a staggered drain starting at the cross and ending at 40.0 s after 09:30:00.
+- **Nasdaq-listed symbols (Q, G, S):** a staggered drain starting at the cross and ending close to 40 s after 09:30:00
+  (39.995 s for everything except 83 AAPL inserts at 40.004 to 40.017 s; on 2019-01-30 it ends at 31.7 s).
   Only 22% of late inserts fall within 5 s of the cross; 69% of AAPL's are in the last 5 s. Batches of about 50 orders
   per release timestamp (AAPL: 278 release timestamps).
 - The drain takes longer the more orders are held: median completion 15 s for 20 to 50 held orders, 24 s for 50 to 200,
   31 s for 200 to 1,000, 37 s above 1,000 (correlation of log count with completion time 0.77). That reads as a
-  rate-limited release with a hard ceiling at 09:30:40. Release order only weakly follows reference number (rank
+  rate-limited release. Whether 40 s is a ceiling or just where the queue ran out is unresolved (see below). Release order only weakly follows reference number (rank
   correlation -0.03 to -0.40), so it is not a simple oldest-first queue. This is an observation of the feed, not a
   confirmed rule.
 - Late inserts per 1,000 Adds by market category: Q 4.9, G 1.8, S 15.2, N 0.47, P 0.11, Z 0.23, A 3.3.
 - The 1 s vs 11 s figure is not supported. I could not find where it came from. The nearest numbers are the open
   marker (median 0.85 s after 09:30:00) and Nasdaq-listed completion times, which spread continuously from 5 s to 40 s.
 
+## Panel days (2026-11-23)
+
+The 25-symbol panel (`scripts/panel_symbols.txt`: 5 symbols per tier by 2020-01-30 rank, plus AAPL, MSFT, SPY, QQQ, F)
+on four days. These are 25-symbol extracts, not full days. Entry-order priority, same build as the full day.
+Per-day JSON and per-symbol CSVs: `results/scale-up/panel/<day>/`.
+
+| Day | Messages | Continuous events | Unexplained | Exact (displayed events) | Audit: not FIFO / audited | Audit residual | Late inserts |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2019-01-30 | 17,982,556 | 274,889 | 0 | 94.58% | 7,333 / 12,026 | 0 | 51,313 |
+| 2019-08-30 | 13,825,756 | 189,930 | 0 | 94.97% | 3,622 / 7,103 | 0 | 48,348 |
+| 2019-12-30 | 12,006,327 | 164,377 | 0 | 93.86% | 3,792 / 7,224 | 0 | 32,765 |
+| 2020-01-30 | 22,492,463 | 273,848 | 0 | 93.93% | 4,787 / 11,434 | 0 | 35,006 |
+
+Replay: 0 unknown refs, 0 overfills, 0 crossed books on all four. Exact = (match + match_hidden) / (continuous - hidden_only).
+
+- The rules fitted on 2020-01-30 (entry-order priority, repriced remainder, better working price) hold on three
+  other days with no change: 0 unexplained and 0 audit residual on each.
+- The like-for-like check asked for on 11-22: on the same 25 symbols, 2020-01-30 has 42% of audited events failing a
+  displayed-only FIFO prediction, against 51% to 61% on the 2019 days and 38% on the full 2020-01-30 market. So the
+  higher 2019 share is partly the panel's mix of heavy names and partly the day.
+- 2019-01-30 has 19,623 non-continuous (`cross`) events against 3,146 and 6,676 on the other 2019 days. Not traced.
+- Only 11 of the 25 panel symbols are Nasdaq-listed and tier 2 has none, so nothing about the opening release by
+  tier should be read from the panel.
+
+## Ablation: what each rule buys (2026-11-23)
+
+`nfe_fidelity --priority feed` is plain FIFO in feed order; `--priority ref` (the default) orders each level by
+reference number. Full day run as 4 locate shards with the new `--shard K/N` flag (the shard event counts add up to
+7,003,063, the single-process total). Files: `results/ablation/`.
+
+Full 2020-01-30 day, 5,635,687 continuous events with at least one displayed fill:
+
+| Model of the displayed queue | Events it reproduces | Share | Not reproduced |
+| --- | --- | --- | --- |
+| Price-time, FIFO in feed order, exact fill sequence, events with only E messages or E plus hidden prints | 5,373,187 | 95.34% | |
+| plus: a remainder posted behind its own fills is read as repriced, and events containing hidden or better-price executions are scored on their displayed fills only | 5,539,949 | 98.30% | 95,738 |
+| plus: orders that execute at a better price than displayed are filled first (working-price rule) | 5,632,591 | 99.95% | 3,096 |
+| plus: entry-order priority (reference number) instead of feed order | 5,635,687 | 100% | 0 |
+
+The last two rows are not predictions in the same sense as the first two: the working price is read from the event's
+own C messages, so that row explains executions after the fact. Entry-order priority is a real ex-ante rule, and it
+is what turns 2,844 unexplained events and 252 audit residuals into 0.
+
+Same switch on the four panel days:
+
+| Day (25 symbols) | Unexplained, feed order | Audit residual, feed order | Both, entry order |
+| --- | --- | --- | --- |
+| 2019-01-30 | 200 | 17 | 0 |
+| 2019-08-30 | 83 | 8 | 0 |
+| 2019-12-30 | 270 | 15 | 0 |
+| 2020-01-30 | 254 | 29 | 0 |
+| Full 2020-01-30 | 2,844 | 252 | 0 |
+
+So the negative control holds on every day: take entry-order priority away and both the unexplained count and the
+audit residual come back.
+
+## Opening release: where the investigation stopped (2026-11-23)
+
+Full-market late inserts on two days, Nasdaq-listed symbols (market category Q, G, S):
+
+| Day | Late inserts (all) | Nasdaq-listed, 0 to 40 s | Symbols | Batches | Last in window | Outside the window |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2019-01-30 | 310,513 | 270,080 | 2,831 | 16,110 | 31.723 s | 3 (PFF at 16:00:00.313) |
+| 2020-01-30 | 316,692 | 277,214 | 2,982 | 17,846 | 39.995 s | 83 (AAPL at 40.004 to 40.017 s) |
+
+- A batch is one (symbol, timestamp) pair. While many symbols are active, batches per second equals symbols per
+  second (each symbol gets at most one batch per pass of about 1 s). Later the total stays roughly flat (about 400 to
+  540 batches/s in 2019, 330 to 440 in 2020) while the number of active symbols falls to single digits, so the
+  largest names finish last and together. That is what one market-wide release queue with roughly constant
+  throughput would look like. Exploratory on 2019-01-30, then confirmed on 2020-01-30 against a prediction committed
+  first (engineering log). Still "consistent with": no rule text found for the sequencing.
+- Unresolved, and left there: whether 40 s is a cap. In 2020 the queue was still releasing about 330 batches/s in
+  second 39 and AAPL ran 4 to 17 ms past 40.000. Three of four days end between 39.7 and 40.02 s; 2019-01-30 ends at
+  31.7 s. The three PFF inserts at 16:00 on 2019-01-30 look like a separate closing mechanism and were not traced.
+- Correction: an earlier note of mine cited "AMZN at 39.67 s" as the last release. That number came from the `max`
+  column of `results/scale-up/release_delay_by_symbol.csv`, which is not a release timestamp. `late.csv` is the
+  source of truth; do not cite the AMZN figure.
+- Wording to use: "all but 83 of 316,692 late inserts fall between 09:30:00 and 09:30:40" (2020-01-30), not "all".
+
 ## Not done
 
-- **Multi-day runs (3 to 5 more days).** The Nasdaq host is blocked from the sandbox shell (403 from the proxy), so
-  downloads had to go through your browser, and access to your Downloads folder was refused, so I cannot see or move
-  the files. I clicked the 12302019 link once in the built-in browser to test; whether a 3.5 GB file landed in your
-  Downloads folder is unknown. Chosen days (same file format as yours, spread across 2019): 01302019 (4.76 GB),
-  08302019 (4.08 GB), 12302019 (3.52 GB). The `.md5sum` links return 404 on the server; verify with `gzip -t`.
-  Per day: `gunzip -c data/DAY.NASDAQ_ITCH50.gz > data/DAY.NASDAQ_ITCH50 && scripts/panel_day.sh data/DAY.NASDAQ_ITCH50`.
-  The script is tested on 2020-01-30 (43 s, 25 symbols, 0 unexplained).
-- A single-process run over the whole file, and the Mac's physical RAM: the sandbox shell is a Linux VM with 3.8 GB,
-  not the Mac. Disk on the Mac volume: 461 GB total, 98 GB free (79% used), enough for the 13 GB file.
-- Performance on the full day (fast book vs baseline): not run.
+- A second full day in one process (only 2020-01-30 has a full-market fidelity run; the 2019 days are panel extracts,
+  plus a full-market late-insert count for 2019-01-30).
+- Performance on the full day: `docs/perf-log.md` has a real-data comparison on one panel extract only.
 
 ## Caveats
 
-- Sharding is equivalent per symbol by construction, not proven end to end. Check: run
-  `build/nfe_fidelity data/01302020.NASDAQ_ITCH50` on the Mac; expect 7,003,063 events, 0 unexplained, 316,692 late
-  inserts (late inserts come from `nfe_lateadds`; `nfe_fidelity` prints its own count of the same thing).
+- The 11-22 run was sharded. On 11-23 the whole file was rerun in one process on the Mac (240 s, 2.49 GB peak): every
+  total is identical (7,003,063 events, 0 unexplained, 316,692 late inserts, 92,645 audit events reproduced).
+  `make verify-real ITCH=data/01302020.NASDAQ_ITCH50` repeats that check against `results/expected/01302020.json`.
 - Tier 5 (symbols under 2,000 messages) and the full-day tier shares are measured on one day.
 - I looked at per-symbol late-insert counts of the 5-symbol extract (AAPL 13,409, F 32, SPY 3) after committing the
   predictions and before the full-day run. Nothing in the predictions was changed.

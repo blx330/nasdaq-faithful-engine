@@ -1,0 +1,20 @@
+{
+  "file": "out/panel/12302019.NASDAQ_ITCH50/panel.itch",
+  "messages": 12006327,
+  "unknown_type": 0,
+  "malformed": 0,
+  "truncated_tail_bytes": 0,
+  "unknown_ref": 0,
+  "duplicate_ref": 0,
+  "overfill": 0,
+  "crossed_continuous": 0,
+  "crossed_other": 0,
+  "broken_trades": 0,
+  "c_printable": 4626,
+  "c_nonprintable": 274,
+  "p_trades": 37278,
+  "first_anomaly_msg": 0,
+  "orders_open_at_end": 0,
+  "seconds": 2.225,
+  "by_type": {"A": 5505604, "C": 4900, "D": 5348300, "E": 222638, "F": 11915, "H": 25, "I": 11269, "K": 3, "L": 877, "P": 37278, "Q": 50, "R": 25, "S": 6, "U": 733730, "V": 1, "X": 129681, "Y": 25}
+}

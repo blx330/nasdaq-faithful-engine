@@ -1,0 +1,25 @@
+== extract panel
+kept 12006327 of 268744780 messages
+== replay
+messages=12006327 unknown_ref=0 overfill=0 crossed_continuous=0 crossed_other=0  2.23s (5.4 M msg/s)
+== fidelity (with audit)
+events=167523 continuous=164377 exact=0.9386 exact_no_hidden=0.9589 unexplained=0  (1.76s)
+  priority=ref late_inserts=32765 late_events=370
+  match             125630
+  match_hidden      4273
+  non_displayed     3106
+  nondisplay_price  4118
+  cross             3146
+  grouping          0
+  remainder_repriced 1268
+  hidden_only       25982
+  unexplained       0
+  audit_reconstruction non_displayed: reproduced=118 residual=0
+  audit_reconstruction nondisplay_price: reproduced=3674 residual=0
+  audit_bad non_displayed: price_priority=82 tie=12 contradiction=0 non_monotone=0 qty_only=24
+  audit_bad nondisplay_price: price_priority=3592 tie=11 contradiction=0 non_monotone=0 qty_only=71
+  audit (displayed-only re-prediction) non_displayed ok=2988 bad=118 skipped=0; nondisplay_price ok=444 bad=3674 skipped=0
+== late inserts
+messages=12006327 late_inserts=32765 unknown_ref=0
+== queue tracking
+tracked 2619349 orders at the touch

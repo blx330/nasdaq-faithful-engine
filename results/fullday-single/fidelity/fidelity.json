@@ -1,0 +1,15 @@
+{
+  "messages": 423285709,
+  "events": 7003063,
+  "unknown_ref": 0,
+  "by_class": {"match": 5188865, "match_hidden": 187259, "non_displayed": 130346, "nondisplay_price": 111827, "cross": 128088, "grouping": 0, "remainder_repriced": 17390, "hidden_only": 1239288, "unexplained": 0},
+  "priority": "ref",
+  "late_inserts": 316692,
+  "late_events": 4608,
+  "audit": {"non_displayed": {"ok": 128461, "bad": 1885, "skipped": 0}, "nondisplay_price": {"ok": 21067, "bad": 90760, "skipped": 0}},
+  "audit_reconstruction": {"non_displayed": {"ok": 1885, "residual": 0}, "nondisplay_price": {"ok": 90760, "residual": 0}},
+  "audit_categories": {"non_displayed": [1340, 186, 0, 0, 359], "nondisplay_price": [89254, 264, 0, 0, 1242]},
+  "first_unexplained_msg": 0,
+  "first_anomaly_msg": 0,
+  "seconds": 240.106
+}

@@ -1,0 +1,28 @@
+{
+ "by_class": {
+  "match": 5186023,
+  "match_hidden": 187164,
+  "non_displayed": 130441,
+  "nondisplay_price": 111827,
+  "cross": 128088,
+  "grouping": 0,
+  "remainder_repriced": 17388,
+  "hidden_only": 1239288,
+  "unexplained": 2844
+ },
+ "events": 7003063,
+ "priority": "feed",
+ "shards": 4,
+ "audit": {
+  "audit.non_displayed.ok": 128305,
+  "audit.non_displayed.bad": 2136,
+  "audit.non_displayed.skipped": 0,
+  "audit.nondisplay_price.ok": 21069,
+  "audit.nondisplay_price.bad": 90758,
+  "audit.nondisplay_price.skipped": 0,
+  "audit_reconstruction.non_displayed.ok": 1885,
+  "audit_reconstruction.non_displayed.residual": 251,
+  "audit_reconstruction.nondisplay_price.ok": 90757,
+  "audit_reconstruction.nondisplay_price.residual": 1
+ }
+}

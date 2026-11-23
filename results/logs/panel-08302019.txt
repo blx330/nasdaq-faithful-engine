@@ -1,0 +1,23 @@
+== replay
+messages=13825756 unknown_ref=0 overfill=0 crossed_continuous=0 crossed_other=0  2.98s (4.6 M msg/s)
+== fidelity
+events=196606 continuous=189930 exact=0.9497 exact_no_hidden=0.9657 unexplained=0  (2.22s)
+  priority=ref late_inserts=48348 late_events=116
+  match             149945
+  match_hidden      5293
+  non_displayed     2897
+  nondisplay_price  4206
+  cross             6676
+  grouping          0
+  remainder_repriced 1115
+  hidden_only       26474
+  unexplained       0
+  audit_reconstruction non_displayed: reproduced=115 residual=0
+  audit_reconstruction nondisplay_price: reproduced=3507 residual=0
+  audit_bad non_displayed: price_priority=63 tie=21 contradiction=0 non_monotone=0 qty_only=31
+  audit_bad nondisplay_price: price_priority=3334 tie=45 contradiction=0 non_monotone=0 qty_only=128
+  audit (displayed-only re-prediction) non_displayed ok=2782 bad=115 skipped=0; nondisplay_price ok=699 bad=3507 skipped=0
+== late
+messages=13825756 late_inserts=48348 unknown_ref=0
+== queue
+tracked 2935251 orders at the touch

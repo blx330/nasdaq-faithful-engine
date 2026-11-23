@@ -1,0 +1,20 @@
+{
+  "file": "/sessions/rcw-01mmrkw9hjkavxsueabideeg/w/panel2020.itch",
+  "messages": 22492463,
+  "unknown_type": 0,
+  "malformed": 0,
+  "truncated_tail_bytes": 0,
+  "unknown_ref": 0,
+  "duplicate_ref": 0,
+  "overfill": 0,
+  "crossed_continuous": 0,
+  "crossed_other": 0,
+  "broken_trades": 0,
+  "c_printable": 6280,
+  "c_nonprintable": 181,
+  "p_trades": 74161,
+  "first_anomaly_msg": 0,
+  "orders_open_at_end": 0,
+  "seconds": 6.605,
+  "by_type": {"A": 10133330, "C": 6461, "D": 9863629, "E": 373376, "F": 15960, "H": 25, "I": 11264, "K": 2, "L": 881, "P": 74161, "Q": 50, "R": 25, "S": 6, "U": 1598030, "V": 1, "X": 415237, "Y": 25}
+}
