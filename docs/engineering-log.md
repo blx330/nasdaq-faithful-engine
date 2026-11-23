@@ -190,3 +190,21 @@ the extract, 0 on the full day (92,645 events reproduced), and with plain FIFO p
 
 **Process notes.** The sandbox shell cannot run anything longer than about 170 s and cannot reach emi.nasdaq.com, hence
 the symbol shards. Git left lock files in `.git` because deletion is off in the connected folder; moved aside, not deleted.
+
+## 2026-11-23: single-process check of the full day
+
+**Result.** Reran `nfe_fidelity` on the whole 2020-01-30 file in one process on the Mac (16 GB) to check the
+11-22 sharded run. Every total matches: 7,003,063 events, 6,874,975 continuous, 0 unexplained, 316,692 late
+inserts, 4,608 late events, and the audit reproduces all 92,645 flagged events (1,885 `non_displayed`, 90,760
+`nondisplay_price`) with 0 residual. The classes sum to the event total and `cross` equals events minus
+continuous, so the shards were not dropping or double-counting events at their boundaries. 240 s wall clock,
+2.49 GB peak resident, so the full day fits comfortably in one process and sharding was only a sandbox limit.
+
+**Audit breakdown.** The naive displayed-only re-prediction splits the 92,645 into 90,594 price priority, 450
+ties and 1,601 quantity-only, the same shape as on the extract. As on 11-22, the ties and quantity-only cases
+are the better-working-price mechanism charged to the wrong orders; the constructive test reproduces all of them.
+
+**Overall exact match.** 95.39% of events, 97.57% excluding hidden-only events.
+
+**Next.** The three panel days (12302019, 08302019, 01302019) are downloaded and pass `gzip -t`; running
+`scripts/panel_day.sh` on each.
